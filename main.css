@@ -1,3 +1,12 @@
+/* define color variables */
+:root {
+    --calc-background-color: #1c1c1c;
+    --grey-btn-color: #d4d4d2;
+    --dark-grey-btn-color: #505050;
+    --orange-btn-color: #ff9500;
+}
+
+/* positioning of the whole calculator */
 body {
     display: flex;
     justify-content: center;
@@ -5,13 +14,15 @@ body {
     align-items: center;
 }
 
+/* size and color of the calculator */
 #main-container {
-    background-color: black;
+    background-color: var(--calc-background-color);
     height: 50vh;
     width: 30vh;
     border-radius: 1rem;
 }
 
+/* calculator screen sizing */
 #screen {
     border: 2px solid red; /* temporary */
     box-sizing: border-box; /* temporary */
@@ -19,26 +30,59 @@ body {
     height: 20%;
 }
 
-/* grid of 4 columns and 5 rows */
+/* container for all the buttons */
 #buttons-container {
     border: 2px solid yellow; /* temporary */
     box-sizing: border-box; /* temporary */
     width: 100%;
     height: 80%;
-    padding: 0.5rem;
-
+    padding: 0.7rem;
     /* Grid */
     display: grid;
-    grid-gap: 0.7rem;
+    grid-gap: 0.9rem;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 }
 
+/* button styling */
 button {
     border-radius: 50%;
+    border-style: none;
+    font-weight: 450;
+    font-size: 1.5rem;
 }
 
 #btn-0 {
     grid-column: 1 / 3;
     border-radius: 2rem;
+    text-align: left;
+    padding-left: 1.5rem;
+}
+
+.grey-btn {
+    background-color: var(--grey-btn-color);
+    color: var(--dark-grey-btn-color);
+}
+
+.orange-btn {
+    background-color: var(--orange-btn-color);
+    color: whitesmoke;
+}
+
+.dark-grey-btn {
+    background-color: var(--dark-grey-btn-color);
+    color: whitesmoke;
+}
+
+/* button hover styling */
+.grey-btn:hover {
+    opacity: 0.7;
+}
+
+.orange-btn:hover {
+    opacity: 0.7;
+}
+
+.dark-grey-btn:hover {
+    opacity: 0.7;
 }
