@@ -18,7 +18,6 @@ const divide = (a, b) => {
     else {
         return "Can't divide by 0!"
     }
-
 }
 
 const getPercent = (a) => {
@@ -26,7 +25,7 @@ const getPercent = (a) => {
 }
 
 const changeSign = (a) => {
-    if (a > 0) {
+    if (a >= 0) {
         return -a;
     }
     else {
@@ -51,3 +50,4 @@ const operator = (a, operator, b) => {
         return divide(a, b);
     }
 }
+
