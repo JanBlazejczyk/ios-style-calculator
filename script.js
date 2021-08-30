@@ -53,7 +53,12 @@ const operator = (a, operator, b) => {
 
 // for each digit button add an event listener for clicking the button
 // that will handle displaying digits on the screen
-// TODO: make the numbers smaller when the inputField.HTML.length is bigger than 6 and only add the numbers if it's smaller than 9
+// TODO: make spaces
+// kiedy długość === 5 spacja jest na 2 indeksie
+// kiedy długość === 6 spacja jest na 3 indeksie
+// kiedy długość === 7 spacja jest na 1 i 5 indeksie
+// kiedy długość === 8 spacja jest na 2 i 6 indeksie
+// kiedy długość === 7 spacja jest na 3 i 7 indeksie
 const digitButtons = document.querySelectorAll(".dark-grey-btn");
 const inputField = document.querySelector(".input-field");
 
@@ -61,11 +66,14 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 
     if (inputField.innerHTML === "0") {
         inputField.innerHTML = digitButton.innerHTML;
-        console.log(inputField.innerHTML.length);
+    }
+    else if (inputField.innerHTML.length === 6) {
+        inputField.classList.remove("input-field");
+        inputField.classList.add("input-field-smaller");
+        inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
     }
     else if (inputField.innerHTML.length < 9) {
         inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-        console.log(inputField.innerHTML.length);
     }
 }))
 
