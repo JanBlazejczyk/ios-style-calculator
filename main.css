@@ -51,6 +51,12 @@ body {
     font-size: 3rem;
 }
 
+.input-field-smallest {
+    color: white;
+    font-weight: 450;
+    font-size: 2.7rem;
+}
+
 /* container for all the buttons */
 #buttons-container {
     /* border: 2px solid yellow; */
