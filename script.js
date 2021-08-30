@@ -73,50 +73,71 @@ let numberOfDigits = 1;
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {
     console.log("Number of digits at the moment of the click:", numberOfDigits);
-    if (inputField.innerHTML === "0") {
-        inputField.innerHTML = digitButton.innerHTML;
-        numberOfDigits += 1;
+    if (isDecimal === false) {
+        if (inputField.innerHTML === "0") {
+            inputField.innerHTML = digitButton.innerHTML;
+            numberOfDigits += 1;
+        }
+        else if (numberOfDigits === 5) {
+            let spacedInput = inputField.innerHTML.slice(0, 2) + " " + inputField.innerHTML.slice(2);
+            inputField.innerHTML = spacedInput;
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
+        else if (numberOfDigits === 6) {
+            let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4);
+            inputField.innerHTML = spacedInput;
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
+        else if (numberOfDigits === 7) {
+            inputField.classList.remove("input-field");
+            inputField.classList.add("input-field-smaller");
+            let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
+                " " + inputField.innerHTML.slice(5);
+            inputField.innerHTML = spacedInput;
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
+        else if (numberOfDigits === 8) {
+            inputField.classList.remove("input-field-smaller");
+            inputField.classList.add("input-field-smallest");
+            let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
+                inputField.innerHTML.slice(6, 7) + " " + inputField.innerHTML.slice(7);
+            inputField.innerHTML = spacedInput;
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
+        else if (numberOfDigits === 9) {
+            let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4, 6) +
+                inputField.innerHTML.slice(7, 8) + " " + inputField.innerHTML.slice(8);
+            inputField.innerHTML = spacedInput;
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
+
+        else if (numberOfDigits < 10) {
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
     }
-    else if (numberOfDigits === 5) {
-        let spacedInput = inputField.innerHTML.slice(0, 2) + " " + inputField.innerHTML.slice(2);
-        inputField.innerHTML = spacedInput;
-        inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-        numberOfDigits += 1;
-    }
-    else if (numberOfDigits === 6) {
-        let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4);
-        inputField.innerHTML = spacedInput;
-        inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-        numberOfDigits += 1;
-    }
-    else if (numberOfDigits === 7) {
-        inputField.classList.remove("input-field");
-        inputField.classList.add("input-field-smaller");
-        let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
-            " " + inputField.innerHTML.slice(5);
-        inputField.innerHTML = spacedInput;
-        inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-        numberOfDigits += 1;
-    }
-    else if (numberOfDigits === 8) {
-        inputField.classList.remove("input-field-smaller");
-        inputField.classList.add("input-field-smallest");
-        let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
-            inputField.innerHTML.slice(6, 7) + " " + inputField.innerHTML.slice(7);
-        inputField.innerHTML = spacedInput;
-        inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-        numberOfDigits += 1;
-    }
-    else if (numberOfDigits === 9) {
-        let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4, 6) +
-            inputField.innerHTML.slice(7, 8) + " " + inputField.innerHTML.slice(8);
-        inputField.innerHTML = spacedInput;
-        inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-        numberOfDigits += 1;
+    else {
+        if (numberOfDigits === 7) {
+            inputField.classList.remove("input-field");
+            inputField.classList.add("input-field-smaller");
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
+        else if (numberOfDigits === 8) {
+            inputField.classList.remove("input-field-smaller");
+            inputField.classList.add("input-field-smallest");
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
+        else if (numberOfDigits < 10) {
+            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+            numberOfDigits += 1;
+        }
     }
 
-    else if (numberOfDigits < 10) {
-        inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-        numberOfDigits += 1;
-    }
 }))
