@@ -64,15 +64,15 @@ commaButton.addEventListener("click", () => {
 })
 
 const plusMinusButton = document.querySelector("#btn-plus-minus");
-const minusInput = document.querySelector(".minus-input-field")
+const minusField = document.querySelector(".minus-input-field")
 let isNegative = false;
 
 plusMinusButton.addEventListener("click", () => {
     if (isNegative === false) {
-        minusInput.insertAdjacentHTML("beforeend", "-");
+        minusField.insertAdjacentHTML("beforeend", "-");
         isNegative = true;
     } else {
-        minusInput.innerHTML = "";
+        minusField.innerHTML = "";
         isNegative = false;
     }
 
@@ -108,6 +108,8 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         else if (numberOfDigits === 7) {
             inputField.classList.remove("input-field");
             inputField.classList.add("input-field-smaller");
+            minusField.classList.remove("minus-input-field");
+            minusField.classList.add("minus-input-field-smaller");
             let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
                 " " + inputField.innerHTML.slice(5);
             inputField.innerHTML = spacedInput;
@@ -117,6 +119,8 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         else if (numberOfDigits === 8) {
             inputField.classList.remove("input-field-smaller");
             inputField.classList.add("input-field-smallest");
+            minusField.classList.remove("minus-input-field-smaller");
+            minusField.classList.add("minus-input-field-smallest");
             let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
                 inputField.innerHTML.slice(6, 7) + " " + inputField.innerHTML.slice(7);
             inputField.innerHTML = spacedInput;
@@ -140,12 +144,16 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         if (numberOfDigits === 7) {
             inputField.classList.remove("input-field");
             inputField.classList.add("input-field-smaller");
+            minusField.classList.remove("minus-input-field");
+            minusField.classList.add("minus-input-field-smaller");
             inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
             numberOfDigits += 1;
         }
         else if (numberOfDigits === 8) {
             inputField.classList.remove("input-field-smaller");
             inputField.classList.add("input-field-smallest");
+            minusField.classList.remove("minus-input-field-smaller");
+            minusField.classList.add("minus-input-field-smallest");
             inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
             numberOfDigits += 1;
         }
