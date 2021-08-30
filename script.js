@@ -54,8 +54,8 @@ const operator = (a, operator, b) => {
 // DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals on the screen
 // comma can appear on the screen only once, and when there is already some number
 const commaButton = document.querySelector(".comma");
-
 let isDecimal = false;
+
 commaButton.addEventListener("click", () => {
     if (inputField.innerHTML !== "0" && isDecimal === false) {
         isDecimal = true;
@@ -63,12 +63,27 @@ commaButton.addEventListener("click", () => {
     }
 })
 
+const plusMinusButton = document.querySelector("#btn-plus-minus");
+const minusInput = document.querySelector(".minus-input-field")
+let isNegative = false;
+
+plusMinusButton.addEventListener("click", () => {
+    if (isNegative === false) {
+        minusInput.insertAdjacentHTML("beforeend", "-");
+        isNegative = true;
+    } else {
+        minusInput.innerHTML = "";
+        isNegative = false;
+    }
+
+})
+
 // for each digit button add an event listener for clicking the button
 // that will handle displaying digits on the screen with spaces in the correct places
 // TODO
 // check how many digits are on the screen, so minus spaces and commma and minus sign
 const digitButtons = document.querySelectorAll(".digit");
-const inputField = document.querySelector(".input-field");
+const inputField = document.querySelector(".digit-input-field");
 let numberOfDigits = 1;
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {

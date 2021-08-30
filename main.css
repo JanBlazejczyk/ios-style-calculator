@@ -39,9 +39,15 @@ body {
     padding-left: 0.7rem;
 }
 
-.input-field {
+.digit-input-field {
     color: white;
     font-weight: 450;
+    font-size: 3.5rem;
+}
+
+.minus-input-field {
+    color: white;
+    font-weight: 350;
     font-size: 3.5rem;
 }
 
