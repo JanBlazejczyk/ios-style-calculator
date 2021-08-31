@@ -51,6 +51,27 @@ const operator = (a, operator, b) => {
     }
 }
 
+// function to switch a string to a number
+const stringToNumber = (string) => {
+    // convert string to list
+    const numberArray = string.split("");
+    // use filter to remove the spaces
+    const numberArrayNoSpaces = numberArray.filter(char => char !== " ");
+    // replace the comma with a dot
+    for (i = 0; i < numberArrayNoSpaces.length; i++) {
+        if (numberArrayNoSpaces[i] === ",") {
+            numberArrayNoSpaces[i] = ".";
+        }
+    }
+    // convert the list to string again
+    const numberString = numberArrayNoSpaces.join("");
+    // use Number() method on the legal string
+    const finalNumber = Number(numberString);
+    console.log(finalNumber);
+    console.log(typeof finalNumber);
+    return finalNumber
+}
+
 // DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals on the screen
 // comma can appear on the screen only once, and when there is already some number
 const commaButton = document.querySelector(".comma");
@@ -63,6 +84,9 @@ commaButton.addEventListener("click", () => {
     }
 })
 
+// when the +/- button is clicked
+// if the number is positive the minus sign appears at the beggining of the number
+// if the number is negative the minus sign disappears from the beggining of the number
 const plusMinusButton = document.querySelector("#btn-plus-minus");
 const minusField = document.querySelector(".minus-input-field")
 let isNegative = false;
@@ -80,14 +104,11 @@ plusMinusButton.addEventListener("click", () => {
 
 // for each digit button add an event listener for clicking the button
 // that will handle displaying digits on the screen with spaces in the correct places
-// TODO
-// check how many digits are on the screen, so minus spaces and commma and minus sign
 const digitButtons = document.querySelectorAll(".digit");
 const inputField = document.querySelector(".digit-input-field");
 let numberOfDigits = 1;
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {
-    console.log("Number of digits at the moment of the click:", numberOfDigits);
     if (isDecimal === false) {
         if (inputField.innerHTML === "0") {
             inputField.innerHTML = digitButton.innerHTML;
@@ -162,5 +183,26 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
             numberOfDigits += 1;
         }
     }
-
 }))
+
+/*
+TODO:
+Click on any of the operand buttons:
+- make the operand appear on: create a class
+- clicked operator's html will be stored in an operator variable
+- check if the numA is defined
+- if not:
+- current number on the screen is stored in a numA variable (converted from string to number)
+- when the user clicks on other number the display functionality will work again
+- operator will stop to appear on
+#if numA is undefined the current behaviour stays the same
+#if numA has a value inputField.innerHTML = digitButton.innerHTML
+#if inputField.length === 1 inputField.adjecentHTML...
+- if yes
+- check if the numB is defined
+- if not
+- current number on the screen is stored in a numB variable (converted from string to number)
+- operation is made on the two numbers
+- the result is displayed on the screen
+- the result becomes numA, numB becomes undefined
+*/
