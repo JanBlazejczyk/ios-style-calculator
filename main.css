@@ -112,6 +112,11 @@ button {
     color: white;
 }
 
+.orange-btn-operator-on {
+    color: var(--orange-btn-color);
+    background-color: white;
+}
+
 .dark-grey-btn {
     background-color: var(--dark-grey-btn-color);
     color: white;

@@ -1,3 +1,4 @@
+// HELPER FUNCTIONS
 // functions for basic math operations
 const add = (a, b) => {
     return a + b;
@@ -36,7 +37,7 @@ const changeSign = (a) => {
 // function for performing an operation
 // takes two numbers and an operator (str)
 // returns the result of the operation
-const operator = (a, operator, b) => {
+const operate = (a, operator, b) => {
     if (operator === "+") {
         return add(a, b);
     }
@@ -46,12 +47,14 @@ const operator = (a, operator, b) => {
     else if (operator === "*") {
         return multiply(a, b);
     }
-    else if (operator === "/") {
+    else if (operator === "÷") {
         return divide(a, b);
     }
 }
 
 // function to switch a string to a number
+// it uses the input from the calculator screen so it removes the spaces
+// and replaces commas with dots to represent a correct decimal
 const stringToNumber = (string) => {
     // convert string to list
     const numberArray = string.split("");
@@ -67,18 +70,77 @@ const stringToNumber = (string) => {
     const numberString = numberArrayNoSpaces.join("");
     // use Number() method on the legal string
     const finalNumber = Number(numberString);
-    console.log(finalNumber);
-    console.log(typeof finalNumber);
     return finalNumber
 }
 
-// DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals on the screen
+// function for displaying the result of an operation on the calculator screen
+// takes a number and displays the number converted to string
+// the result is the output to the calculator screen so it adds the spaces
+// and replaces dots with commas to correspond to the calculator comma button
+const displayResult = (result) => {
+    const resultInitialString = result.toString();
+    // create a list of characters
+    const resultList = resultInitialString.split("");
+    // replace the commas with a dot
+    for (i = 0; i < resultList.length; i++) {
+        if (resultList[i] === ".") {
+            resultList[i] = ",";
+            break;
+        }
+    }
+    // if the number is less than 0
+    // display the minus in a separate HTML element
+    // remove the minus from the character array in order not to duplicate it
+    if (resultList[0] === "-") {
+        minusField.innerHTML = "-";
+        resultList.shift();
+    }
+    else {
+        minusField.innerHTML = "";
+    }
+    // iterate through list items and count the digits that appear before the first comma
+    let numOfDigitsBeforeComma = 0;
+    for (element of resultList) {
+        if (element !== ",") {
+            numOfDigitsBeforeComma += 1;
+        }
+        else {
+            break;
+        }
+    }
+    // place the spaces in the correct places in the list
+    if (numOfDigitsBeforeComma === 5) {
+        resultList.splice(2, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 6) {
+        resultList.splice(3, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 7) {
+        resultList.splice(1, 0, " ");
+        resultList.splice(5, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 8) {
+        resultList.splice(2, 0, " ");
+        resultList.splice(6, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 9) {
+        resultList.splice(3, 0, " ");
+        resultList.splice(7, 0, " ");
+    }
+
+    // display the number as a string on the calculator screen
+    const resultToDisplay = resultList.join("");
+    inputField.innerHTML = resultToDisplay;
+}
+
+
+// DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals
 // comma can appear on the screen only once, and when there is already some number
 const commaButton = document.querySelector(".comma");
 let isDecimal = false;
 
 commaButton.addEventListener("click", () => {
-    if (inputField.innerHTML !== "0" && isDecimal === false) {
+    if (isDecimal === false) {
         isDecimal = true;
         inputField.insertAdjacentHTML("beforeend", commaButton.innerHTML);
     }
@@ -102,107 +164,176 @@ plusMinusButton.addEventListener("click", () => {
 
 })
 
-// for each digit button add an event listener for clicking the button
+// event listener for clicking any of the digit buttons
 // that will handle displaying digits on the screen with spaces in the correct places
 const digitButtons = document.querySelectorAll(".digit");
 const inputField = document.querySelector(".digit-input-field");
+// variable that monitors the number of digits on the screen
+// it is used to put spaces in the correct places
 let numberOfDigits = 1;
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {
-    if (isDecimal === false) {
-        if (inputField.innerHTML === "0") {
-            inputField.innerHTML = digitButton.innerHTML;
-            numberOfDigits += 1;
-        }
-        else if (numberOfDigits === 5) {
-            let spacedInput = inputField.innerHTML.slice(0, 2) + " " + inputField.innerHTML.slice(2);
-            inputField.innerHTML = spacedInput;
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
-        }
-        else if (numberOfDigits === 6) {
-            let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4);
-            inputField.innerHTML = spacedInput;
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
-        }
-        else if (numberOfDigits === 7) {
-            inputField.classList.remove("input-field");
-            inputField.classList.add("input-field-smaller");
-            minusField.classList.remove("minus-input-field");
-            minusField.classList.add("minus-input-field-smaller");
-            let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
-                " " + inputField.innerHTML.slice(5);
-            inputField.innerHTML = spacedInput;
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
-        }
-        else if (numberOfDigits === 8) {
-            inputField.classList.remove("input-field-smaller");
-            inputField.classList.add("input-field-smallest");
-            minusField.classList.remove("minus-input-field-smaller");
-            minusField.classList.add("minus-input-field-smallest");
-            let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
-                inputField.innerHTML.slice(6, 7) + " " + inputField.innerHTML.slice(7);
-            inputField.innerHTML = spacedInput;
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
-        }
-        else if (numberOfDigits === 9) {
-            let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4, 6) +
-                inputField.innerHTML.slice(7, 8) + " " + inputField.innerHTML.slice(8);
-            inputField.innerHTML = spacedInput;
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+    // when a digit button is pressed all operator buttons must appear off
+    operatorButtons.forEach((operatorButton) => {
+        operatorButton.classList.remove("orange-btn-operator-on");
+    })
+
+    // if the newNum is true we stored one number and the operator is clicked
+    // the user will now enter a new number
+    if (newNum === true || inputField.innerHTML === "0") {
+        inputField.innerHTML = digitButton.innerHTML;
+        // user started to input a new number and this will be false until any operator is pressed again
+        newNum = false;
+
+        // new number is not a deciaml at the beggining
+        isDecimal = false;
+
+        // if the screen displays "0" clicking 0 another time shouldn't add any digits
+        if (digitButton.innerHTML !== "0") {
             numberOfDigits += 1;
         }
 
-        else if (numberOfDigits < 10) {
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
-        }
     }
+    // some number is already in
     else {
-        if (numberOfDigits === 7) {
-            inputField.classList.remove("input-field");
-            inputField.classList.add("input-field-smaller");
-            minusField.classList.remove("minus-input-field");
-            minusField.classList.add("minus-input-field-smaller");
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
+        // add spaces before the comma
+        if (isDecimal === false) {
+            if (numberOfDigits === 5) {
+                let spacedInput = inputField.innerHTML.slice(0, 2) + " " + inputField.innerHTML.slice(2);
+                inputField.innerHTML = spacedInput;
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
+            else if (numberOfDigits === 6) {
+                let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4);
+                inputField.innerHTML = spacedInput;
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
+            else if (numberOfDigits === 7) {
+                inputField.classList.remove("input-field");
+                inputField.classList.add("input-field-smaller");
+                minusField.classList.remove("minus-input-field");
+                minusField.classList.add("minus-input-field-smaller");
+                let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
+                    " " + inputField.innerHTML.slice(5);
+                inputField.innerHTML = spacedInput;
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
+            else if (numberOfDigits === 8) {
+                inputField.classList.remove("input-field-smaller");
+                inputField.classList.add("input-field-smallest");
+                minusField.classList.remove("minus-input-field-smaller");
+                minusField.classList.add("minus-input-field-smallest");
+                let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
+                    inputField.innerHTML.slice(6, 7) + " " + inputField.innerHTML.slice(7);
+                inputField.innerHTML = spacedInput;
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
+            else if (numberOfDigits === 9) {
+                let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4, 6) +
+                    inputField.innerHTML.slice(7, 8) + " " + inputField.innerHTML.slice(8);
+                inputField.innerHTML = spacedInput;
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
+
+            else if (numberOfDigits < 10) {
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
         }
-        else if (numberOfDigits === 8) {
-            inputField.classList.remove("input-field-smaller");
-            inputField.classList.add("input-field-smallest");
-            minusField.classList.remove("minus-input-field-smaller");
-            minusField.classList.add("minus-input-field-smallest");
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
-        }
-        else if (numberOfDigits < 10) {
-            inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
-            numberOfDigits += 1;
+        // do not add spaces after the comma
+        else {
+            if (numberOfDigits === 7) {
+                inputField.classList.remove("input-field");
+                inputField.classList.add("input-field-smaller");
+                minusField.classList.remove("minus-input-field");
+                minusField.classList.add("minus-input-field-smaller");
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
+            else if (numberOfDigits === 8) {
+                inputField.classList.remove("input-field-smaller");
+                inputField.classList.add("input-field-smallest");
+                minusField.classList.remove("minus-input-field-smaller");
+                minusField.classList.add("minus-input-field-smallest");
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
+            else if (numberOfDigits < 10) {
+                inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
+                numberOfDigits += 1;
+            }
         }
     }
+}
+))
+
+// CONDUCTING MATH OPERATIONS FUNCTIONALITY
+// variable for storing an operator string
+let operator = null;
+// variables for storing the first and the second number to operate on
+let numA = null;
+let numB = null;
+// variable for storing what is already on the calculator screen
+let screenContent = null;
+// this indicates when the new number needs to be displayed on the screen 
+// instead of adding digits to the existing one
+let newNum = false;
+
+const operatorButtons = document.querySelectorAll(".operator");
+operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("click", () => {
+
+    // when the operator button is clicked the class is removed from any other operator button that might be on
+    operatorButtons.forEach((operatorButton) => {
+        operatorButton.classList.remove("orange-btn-operator-on");
+    })
+    // and added to the one that is clicked
+    operatorButton.classList.add("orange-btn-operator-on");
+
+    // if numA is null
+    // numA will become the screenContent converted to a number
+    screenContent = minusField.innerHTML + inputField.innerHTML;
+    numA = stringToNumber(screenContent);
+
+    // clicked operator's html will be stored in an operator variable
+    operator = operatorButton.innerHTML;
+
+    // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
+    // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
+    newNum = true;
+    numberOfDigits = 1;
+
+    /*
+   TODO:
+   - if numA is not null and the operator is pressed:
+   - numB will become the screenContent converted to the number
+   - numA and numB will be operated on with the operator: result = operate(numA, operator, numB)
+   - the value of result will be converted to string and displayed on the screen: displayresult(result)
+   - this value will then become numA
+   - numB will become null again
+   - the new operator will become an operator: operator = operatorButton.innerHTML; - this line again
+   */
 }))
 
 /*
-TODO:
-Click on any of the operand buttons:
-- make the operand appear on: create a class
-- clicked operator's html will be stored in an operator variable
-- check if the numA is defined
-- if not:
-- current number on the screen is stored in a numA variable (converted from string to number)
-- when the user clicks on other number the display functionality will work again
-- operator will stop to appear on
-#if numA is undefined the current behaviour stays the same
-#if numA has a value inputField.innerHTML = digitButton.innerHTML
-#if inputField.length === 1 inputField.adjecentHTML...
-- if yes
-- check if the numB is defined
-- if not
-- current number on the screen is stored in a numB variable (converted from string to number)
-- operation is made on the two numbers
-- the result is displayed on the screen
-- the result becomes numA, numB becomes undefined
+TODO
+- percent functionality:
+currently displayed number (A or B) is displayed divded by 100 and is stored in a variable
+
+- equal sign behavior:
+if numA !== null && numB !== null:
+it displayes the result
+operator becomes null
+the result becomes numA
+numB becomes null
+
+- clear functionality:
+clears the curret number and makes it 0
+if numA is null && screen === "0": nothing happens when pressed; shows AC
+if numA is null && screen !== "0": screen becomes "0" when pressed; shows C -> AC; newNum becomes true; number of digits becomes 1
+if numA !== null: screen becomes "0" when pressed; shows C -> AC; the operator stays on; numA actually stays the same
 */
