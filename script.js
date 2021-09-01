@@ -76,7 +76,7 @@ const commaButton = document.querySelector(".comma");
 let isDecimal = false;
 
 commaButton.addEventListener("click", () => {
-    if (inputField.innerHTML !== "0" && isDecimal === false) {
+    if (isDecimal === false) {
         isDecimal = true;
         inputField.insertAdjacentHTML("beforeend", commaButton.innerHTML);
     }
@@ -121,7 +121,12 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 
         // new number is not a deciaml at the beggining
         isDecimal = false;
-        numberOfDigits += 1;
+
+        // if the screen displays "0" clicking 0 another time shouldn't add any digits
+        if (digitButton.innerHTML !== "0") {
+            numberOfDigits += 1;
+        }
+
     }
     // some number is already in
     else {
