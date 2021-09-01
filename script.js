@@ -161,7 +161,6 @@ plusMinusButton.addEventListener("click", () => {
         minusField.innerHTML = "";
         isNegative = false;
     }
-
 })
 
 // event listener for clicking any of the digit buttons
@@ -181,6 +180,10 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
     // if the newNum is true we stored one number and the operator is clicked
     // the user will now enter a new number
     if (newNum === true || inputField.innerHTML === "0") {
+        // when the user starts entering a new number the miuns sign needs to dissapear when it's present
+        if (minusField.innerHTML = "-") {
+            minusField.innerHTML = "";
+        }
         inputField.innerHTML = digitButton.innerHTML;
         // user started to input a new number and this will be false until any operator is pressed again
         newNum = false;
@@ -303,9 +306,12 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
     operator = operatorButton.innerHTML;
 
     // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
+    // isNegative becomes false to so that the first press of +/- button behaves properly when the second number is typed in
     // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
     newNum = true;
+    isNegative = false;
     numberOfDigits = 1;
+
 
     /*
    TODO:
