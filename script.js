@@ -205,28 +205,11 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 }
 ))
 
-/*
-TODO:
-Click on any of the operand buttons:
-- when the user clicks on other number the display functionality will work again
-- operator will stop to appear on
-#if numA is undefined the current behaviour stays the same
-#if numA has a value inputField.innerHTML = digitButton.innerHTML
-#if inputField.length === 1 inputField.adjecentHTML...
-- if yes
-- check if the numB is defined
-- if not
-- current number on the screen is stored in a numB variable (converted from string to number)
-- operation is made on the two numbers
-- the result is displayed on the screen
-- the result becomes numA, numB becomes undefined
-*/
 
 const operatorButtons = document.querySelectorAll(".operator");
 // variable for storing an operator string
 let operator = null;
-// will become false again when the "=" button will be pressed
-let operatorOn = false;
+
 // variables for storing the first and second number
 let numA = null;
 let numB = null;
@@ -245,23 +228,31 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
     // and added to the one that is clicked
     operatorButton.classList.add("orange-btn-operator-on");
 
-    // clicked operator's html will be stored in an operator variable
-    operator = operatorButton.innerHTML;
-
-    // operator will be on
-    operatorOn = true;
-
+    // if numA is null
     // numA will become the screenContent converted to a number
     screenContent = minusField.innerHTML + inputField.innerHTML;
     numA = stringToNumber(screenContent);
+
+    // clicked operator's html will be stored in an operator variable
+    operator = operatorButton.innerHTML;
 
     // now the new number will appear on the screen when the digit button is pressed
     newNum = true;
     numberOfDigits = 1;
 
-
-    console.log("operator:", operator);
-    console.log("type of operator:", typeof operator);
-    console.log("numA:", numA);
-    console.log("type of numA:", typeof numA);
+    /*
+   TODO:
+   - if numA is not null and the operator is pressed:
+   - numB will become the screenContent converted to the number
+   - numA and numB will be operated on with the operator: result = operate(numA, operator, numB)
+   - the value of result will be converted to string and displayed on the screen: first write a function to do so
+   #takes a number
+   #splits it into the list of digits and dots with a possible minus at the beggining
+   #replaces dots with commas
+   #adds spaces in correct places
+   #converts the whole think back to the string
+   #displays it on the screen 
+   - this value will then become numA
+   - the new operator will become an operator: operator = operatorButton.innerHTML; - this line again
+   */
 }))
