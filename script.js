@@ -67,8 +67,6 @@ const stringToNumber = (string) => {
     const numberString = numberArrayNoSpaces.join("");
     // use Number() method on the legal string
     const finalNumber = Number(numberString);
-    console.log(finalNumber);
-    console.log(typeof finalNumber);
     return finalNumber
 }
 
@@ -188,11 +186,6 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 /*
 TODO:
 Click on any of the operand buttons:
-- make the operand appear on: create a class
-- clicked operator's html will be stored in an operator variable
-- check if the numA is defined
-- if not:
-- current number on the screen is stored in a numA variable (converted from string to number)
 - when the user clicks on other number the display functionality will work again
 - operator will stop to appear on
 #if numA is undefined the current behaviour stays the same
@@ -209,13 +202,28 @@ Click on any of the operand buttons:
 
 const operatorButtons = document.querySelectorAll(".operator");
 let operator = null;
-let numA = null;
+let numA = 0;
 let numB = null;
+let screenContent = null;
 operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("click", () => {
+
     // when the new button is clicked the class is removed from any other operator button that might be on
     operatorButtons.forEach((operatorButton) => {
         operatorButton.classList.remove("orange-btn-operator-on");
     })
     // and added to the one that is clicked
     operatorButton.classList.add("orange-btn-operator-on");
+
+    // clicked operator's html will be stored in an operator variable
+    operator = operatorButton.innerHTML;
+
+    // numA will become the screenContent converted to a number
+    screenContent = minusField.innerHTML + inputField.innerHTML;
+    numA = stringToNumber(screenContent);
+
+
+    console.log("operator:", operator);
+    console.log("type of operator:", typeof operator);
+    console.log("numA:", numA);
+    console.log("type of numA:", typeof numA);
 }))
