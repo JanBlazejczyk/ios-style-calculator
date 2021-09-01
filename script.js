@@ -1,4 +1,5 @@
-// helper functions for basic math operations
+// HELPER FUNCTIONS
+// functions for basic math operations
 const add = (a, b) => {
     return a + b;
 }
@@ -46,7 +47,7 @@ const operate = (a, operator, b) => {
     else if (operator === "*") {
         return multiply(a, b);
     }
-    else if (operator === "/") {
+    else if (operator === "÷") {
         return divide(a, b);
     }
 }
@@ -71,6 +72,67 @@ const stringToNumber = (string) => {
     const finalNumber = Number(numberString);
     return finalNumber
 }
+
+// function for displaying the result of an operation on the calculator screen
+// takes a number and displays the number converted to string
+// the result is the output to the calculator screen so it adds the spaces
+// and replaces dots with commas to correspond to the calculator comma button
+const displayResult = (result) => {
+    const resultInitialString = result.toString();
+    // create a list of characters
+    const resultList = resultInitialString.split("");
+    // replace the commas with a dot
+    for (i = 0; i < resultList.length; i++) {
+        if (resultList[i] === ".") {
+            resultList[i] = ",";
+            break;
+        }
+    }
+    // if the number is less than 0
+    // display the minus in a separate HTML element
+    // remove the minus from the character array in order not to duplicate it
+    if (resultList[0] === "-") {
+        minusField.innerHTML = "-";
+        resultList.shift();
+    }
+    else {
+        minusField.innerHTML = "";
+    }
+    // iterate through list items and count the digits that appear before the first comma
+    let numOfDigitsBeforeComma = 0;
+    for (element of resultList) {
+        if (element !== ",") {
+            numOfDigitsBeforeComma += 1;
+        }
+        else {
+            break;
+        }
+    }
+    // place the spaces in the correct places in the list
+    if (numOfDigitsBeforeComma === 5) {
+        resultList.splice(2, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 6) {
+        resultList.splice(3, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 7) {
+        resultList.splice(1, 0, " ");
+        resultList.splice(5, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 8) {
+        resultList.splice(2, 0, " ");
+        resultList.splice(6, 0, " ");
+    }
+    else if (numOfDigitsBeforeComma === 9) {
+        resultList.splice(3, 0, " ");
+        resultList.splice(7, 0, " ");
+    }
+
+    // display the number as a string on the calculator screen
+    const resultToDisplay = resultList.join("");
+    inputField.innerHTML = resultToDisplay;
+}
+
 
 // DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals
 // comma can appear on the screen only once, and when there is already some number
@@ -250,14 +312,28 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
    - if numA is not null and the operator is pressed:
    - numB will become the screenContent converted to the number
    - numA and numB will be operated on with the operator: result = operate(numA, operator, numB)
-   - the value of result will be converted to string and displayed on the screen: first write a function to do so
-   #takes a number
-   #splits it into the list of digits and dots with a possible minus at the beggining
-   #replaces dots with commas
-   #adds spaces in correct places
-   #converts the whole think back to the string
-   #displays it on the screen 
+   - the value of result will be converted to string and displayed on the screen: displayresult(result)
    - this value will then become numA
+   - numB will become null again
    - the new operator will become an operator: operator = operatorButton.innerHTML; - this line again
    */
 }))
+
+/*
+TODO
+- percent functionality:
+currently displayed number (A or B) is displayed divded by 100 and is stored in a variable
+
+- equal sign behavior:
+if numA !== null && numB !== null:
+it displayes the result
+operator becomes null
+the result becomes numA
+numB becomes null
+
+- clear functionality:
+clears the curret number and makes it 0
+if numA is null && screen === "0": nothing happens when pressed; shows AC
+if numA is null && screen !== "0": screen becomes "0" when pressed; shows C -> AC; newNum becomes true; number of digits becomes 1
+if numA !== null: screen becomes "0" when pressed; shows C -> AC; the operator stays on; numA actually stays the same
+*/
