@@ -36,7 +36,7 @@ const changeSign = (a) => {
 // function for performing an operation
 // takes two numbers and an operator (str)
 // returns the result of the operation
-const operator = (a, operator, b) => {
+const operate = (a, operator, b) => {
     if (operator === "+") {
         return add(a, b);
     }
@@ -206,3 +206,16 @@ Click on any of the operand buttons:
 - the result is displayed on the screen
 - the result becomes numA, numB becomes undefined
 */
+
+const operatorButtons = document.querySelectorAll(".operator");
+let operator = null;
+let numA = null;
+let numB = null;
+operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("click", () => {
+    // when the new button is clicked the class is removed from any other operator button that might be on
+    operatorButtons.forEach((operatorButton) => {
+        operatorButton.classList.remove("orange-btn-operator-on");
+    })
+    // and added to the one that is clicked
+    operatorButton.classList.add("orange-btn-operator-on");
+}))
