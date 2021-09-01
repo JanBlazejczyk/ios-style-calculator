@@ -107,9 +107,16 @@ const inputField = document.querySelector(".digit-input-field");
 let numberOfDigits = 1;
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {
+    // when a digit button is pressed all operator buttons must appear off
+    operatorButtons.forEach((operatorButton) => {
+        operatorButton.classList.remove("orange-btn-operator-on");
+    })
+
     if (isDecimal === false) {
-        if (inputField.innerHTML === "0") {
+        if (inputField.innerHTML === "0" || newNum === true) {
             inputField.innerHTML = digitButton.innerHTML;
+            // we just started a new number and this will be false until any operator is pressed again
+            newNum = false;
             numberOfDigits += 1;
         }
         else if (numberOfDigits === 5) {
@@ -159,6 +166,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
             numberOfDigits += 1;
         }
     }
+    // number is decimal if number becomes a decimal we don't add any more spaces after the comma
     else {
         if (numberOfDigits === 7) {
             inputField.classList.remove("input-field");
@@ -181,7 +189,8 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
             numberOfDigits += 1;
         }
     }
-}))
+}
+))
 
 /*
 TODO:
@@ -201,10 +210,19 @@ Click on any of the operand buttons:
 */
 
 const operatorButtons = document.querySelectorAll(".operator");
+// variable for storing an operator string
 let operator = null;
-let numA = 0;
+// will become false again when the "=" button will be pressed
+let operatorOn = false;
+// variables for storing the first and second number
+let numA = null;
 let numB = null;
+// variable for storing the content of the whole screen
 let screenContent = null;
+// this indicates when the new number needs to be displayed on the screen 
+// instead of adding digits to the existing one
+let newNum = false;
+
 operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("click", () => {
 
     // when the new button is clicked the class is removed from any other operator button that might be on
@@ -217,9 +235,16 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
     // clicked operator's html will be stored in an operator variable
     operator = operatorButton.innerHTML;
 
+    // operator will be on
+    operatorOn = true;
+
     // numA will become the screenContent converted to a number
     screenContent = minusField.innerHTML + inputField.innerHTML;
     numA = stringToNumber(screenContent);
+
+    // now the new number will appear on the screen when the digit button is pressed
+    newNum = true;
+    numberOfDigits = 1;
 
 
     console.log("operator:", operator);
