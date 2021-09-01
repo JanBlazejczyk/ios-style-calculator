@@ -1,4 +1,4 @@
-// functions for basic math operations
+// helper functions for basic math operations
 const add = (a, b) => {
     return a + b;
 }
@@ -52,6 +52,8 @@ const operate = (a, operator, b) => {
 }
 
 // function to switch a string to a number
+// it uses the input from the calculator screen so it removes the spaces
+// and replaces commas with dots to represent a correct decimal
 const stringToNumber = (string) => {
     // convert string to list
     const numberArray = string.split("");
@@ -70,7 +72,7 @@ const stringToNumber = (string) => {
     return finalNumber
 }
 
-// DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals on the screen
+// DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals
 // comma can appear on the screen only once, and when there is already some number
 const commaButton = document.querySelector(".comma");
 let isDecimal = false;
@@ -100,10 +102,12 @@ plusMinusButton.addEventListener("click", () => {
 
 })
 
-// for each digit button add an event listener for clicking the button
+// event listener for clicking any of the digit buttons
 // that will handle displaying digits on the screen with spaces in the correct places
 const digitButtons = document.querySelectorAll(".digit");
 const inputField = document.querySelector(".digit-input-field");
+// variable that monitors the number of digits on the screen
+// it is used to put spaces in the correct places
 let numberOfDigits = 1;
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {
@@ -112,11 +116,11 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         operatorButton.classList.remove("orange-btn-operator-on");
     })
 
-    // jeśli newNum === true kolejna kliknięta liczba musi się stać wyświetlaczem 
-    // newNum musi wtedy sie stac false i wszystko inne iść swoim torem
+    // if the newNum is true we stored one number and the operator is clicked
+    // the user will now enter a new number
     if (newNum === true || inputField.innerHTML === "0") {
         inputField.innerHTML = digitButton.innerHTML;
-        // we just started a new number and this will be false until any operator is pressed again
+        // user started to input a new number and this will be false until any operator is pressed again
         newNum = false;
 
         // new number is not a deciaml at the beggining
@@ -130,6 +134,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
     }
     // some number is already in
     else {
+        // add spaces before the comma
         if (isDecimal === false) {
             if (numberOfDigits === 5) {
                 let spacedInput = inputField.innerHTML.slice(0, 2) + " " + inputField.innerHTML.slice(2);
@@ -178,7 +183,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 numberOfDigits += 1;
             }
         }
-        // if the number is decimal
+        // do not add spaces after the comma
         else {
             if (numberOfDigits === 7) {
                 inputField.classList.remove("input-field");
@@ -205,23 +210,22 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 }
 ))
 
-
-const operatorButtons = document.querySelectorAll(".operator");
+// CONDUCTING MATH OPERATIONS FUNCTIONALITY
 // variable for storing an operator string
 let operator = null;
-
-// variables for storing the first and second number
+// variables for storing the first and the second number to operate on
 let numA = null;
 let numB = null;
-// variable for storing the content of the whole screen
+// variable for storing what is already on the calculator screen
 let screenContent = null;
 // this indicates when the new number needs to be displayed on the screen 
 // instead of adding digits to the existing one
 let newNum = false;
 
+const operatorButtons = document.querySelectorAll(".operator");
 operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("click", () => {
 
-    // when the new button is clicked the class is removed from any other operator button that might be on
+    // when the operator button is clicked the class is removed from any other operator button that might be on
     operatorButtons.forEach((operatorButton) => {
         operatorButton.classList.remove("orange-btn-operator-on");
     })
@@ -236,7 +240,8 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
     // clicked operator's html will be stored in an operator variable
     operator = operatorButton.innerHTML;
 
-    // now the new number will appear on the screen when the digit button is pressed
+    // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
+    // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
     newNum = true;
     numberOfDigits = 1;
 
