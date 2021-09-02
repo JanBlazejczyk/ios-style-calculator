@@ -12,12 +12,13 @@ const multiply = (a, b) => {
     return a * b;
 }
 
+const zeroDivisionErrorMessage = "Go back to school:)"
 const divide = (a, b) => {
     if (b !== 0) {
         return a / b;
     }
     else {
-        return "Can't divide by 0!"
+        return zeroDivisionErrorMessage;
     }
 }
 
@@ -41,6 +42,20 @@ const operate = (a, operator, b) => {
     else if (operator === "÷") {
         return divide(a, b);
     }
+}
+
+// function to indicate that the user is about to enter a new number
+const newNumber = () => {
+    newNum = true;
+    numberOfDigits = 1;
+}
+
+const resetFontSizeClasses = () => {
+    inputField.classList.remove("input-field-error-message");
+    inputField.classList.remove("input-field-smallest");
+    inputField.classList.remove("input-field-smaller");
+    minusField.classList.remove("minus-input-field-smallest");
+    minusField.classList.remove("minus-input-field-smaller");
 }
 
 // function to switch a string to a number
@@ -68,6 +83,7 @@ const stringToNumber = (string) => {
 // takes a number and displays the number converted to string
 // the result is the output to the calculator screen so it adds the spaces
 // and replaces dots with commas to correspond to the calculator comma button
+// TODO: should display the result with the correct class
 const displayResult = (result) => {
     const resultInitialString = result.toString();
     // create a list of characters
@@ -121,6 +137,9 @@ const displayResult = (result) => {
 
     // display the number as a string on the calculator screen
     const resultToDisplay = resultList.join("");
+    if (resultToDisplay === zeroDivisionErrorMessage) {
+        inputField.classList.add("input-field-error-message");
+    }
     inputField.innerHTML = resultToDisplay;
     return resultToDisplay;
 }
@@ -181,6 +200,8 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
     // if the newNum is true we stored one number and the operator is clicked
     // the user will now enter a new number
     if (newNum === true || inputField.innerHTML === "0") {
+        // when the user enters a new number reset the font size classes
+        resetFontSizeClasses();
         // when the user starts entering a new number the miuns sign needs to dissapear when it's present
         if (minusField.innerHTML = "-") {
             minusField.innerHTML = "";
@@ -219,9 +240,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 numberOfDigits += 1;
             }
             else if (numberOfDigits === 7) {
-                inputField.classList.remove("input-field");
                 inputField.classList.add("input-field-smaller");
-                minusField.classList.remove("minus-input-field");
                 minusField.classList.add("minus-input-field-smaller");
                 let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
                     " " + inputField.innerHTML.slice(5);
@@ -230,9 +249,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 numberOfDigits += 1;
             }
             else if (numberOfDigits === 8) {
-                inputField.classList.remove("input-field-smaller");
                 inputField.classList.add("input-field-smallest");
-                minusField.classList.remove("minus-input-field-smaller");
                 minusField.classList.add("minus-input-field-smallest");
                 let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
                     inputField.innerHTML.slice(6, 7) + " " + inputField.innerHTML.slice(7);
@@ -256,17 +273,13 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         // do not add spaces after the comma
         else {
             if (numberOfDigits === 7) {
-                inputField.classList.remove("input-field");
                 inputField.classList.add("input-field-smaller");
-                minusField.classList.remove("minus-input-field");
                 minusField.classList.add("minus-input-field-smaller");
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
             else if (numberOfDigits === 8) {
-                inputField.classList.remove("input-field-smaller");
                 inputField.classList.add("input-field-smallest");
-                minusField.classList.remove("minus-input-field-smaller");
                 minusField.classList.add("minus-input-field-smallest");
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
@@ -306,15 +319,17 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
     if (numA === null) {
         // numA will become the screenContent converted to a number
         screenContent = minusField.innerHTML + inputField.innerHTML;
-        numA = stringToNumber(screenContent);
+        if (screenContent !== zeroDivisionErrorMessage) {
+            numA = stringToNumber(screenContent);
+        }
+
 
         // clicked operator's html will be stored in an operator variable
         operator = operatorButton.innerHTML;
 
         // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
         // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
-        newNum = true;
-        numberOfDigits = 1;
+        newNumber();
     }
     // if numA is not null and the operator is pressed
     else if (numA !== null && operator !== null) {
@@ -335,11 +350,15 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
 
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
-        numA = stringToNumber(screenContent);
+        if (screenContent !== zeroDivisionErrorMessage) {
+            numA = stringToNumber(screenContent);
+        }
+        else {
+            numA = null;
+        }
 
         // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
-        newNum = true;
-        numberOfDigits = 1;
+        newNumber();
 
         // numB becomes null again
         numB = null;
@@ -372,26 +391,31 @@ equalButton.addEventListener("click", () => {
 
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
-        numA = stringToNumber(screenContent);
+        if (screenContent !== zeroDivisionErrorMessage) {
+            numA = stringToNumber(screenContent);
+        }
+        else {
+            numA = null;
+        }
 
         // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
-        newNum = true;
-        numberOfDigits = 1;
+        newNumber();
 
         // numB becomes null again
         numB = null;
 
         // operator becomes null again
         operator = null;
+        operatorButtons.forEach((operatorButton) => {
+            operatorButton.classList.remove("orange-btn-operator-on");
+        })
     }
 })
 
 /*
 TODO
-- minus functionality:
--0 should keep a minus whan another digit is clicked
-- when numA is not null perssing the +/- should
-
+- for bigger or smaller numbers the result should be converted to the exponential
+- display result function should display the result with the correct class on
 
 
 - percent functionality:
