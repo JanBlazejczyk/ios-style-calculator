@@ -25,15 +25,6 @@ const getPercent = (a) => {
     return a / 100;
 }
 
-const changeSign = (a) => {
-    if (a >= 0) {
-        return -a;
-    }
-    else {
-        return a;
-    }
-}
-
 // function for performing an operation
 // takes two numbers and an operator (str)
 // returns the result of the operation
@@ -131,6 +122,7 @@ const displayResult = (result) => {
     // display the number as a string on the calculator screen
     const resultToDisplay = resultList.join("");
     inputField.innerHTML = resultToDisplay;
+    return resultToDisplay;
 }
 
 
@@ -138,9 +130,16 @@ const displayResult = (result) => {
 // comma can appear on the screen only once, and when there is already some number
 const commaButton = document.querySelector(".comma");
 let isDecimal = false;
+// if the screen contains the result of the previous operation the user can't make it a decimal
+let canDecimal = true;
 
 commaButton.addEventListener("click", () => {
-    if (isDecimal === false) {
+    screenContent = minusField.innerHTML + inputField.innerHTML;
+    if (isDecimal === false && canDecimal === false) {
+        isDecimal = true;
+        inputField.innerHTML = "0,"
+    }
+    else if (isDecimal === false && canDecimal === true) {
         isDecimal = true;
         inputField.insertAdjacentHTML("beforeend", commaButton.innerHTML);
     }
@@ -190,6 +189,9 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 
         // new number is not a deciaml at the beggining
         isDecimal = false;
+
+        // user can make a decimal out of the new number
+        canDecimal = true;
 
         // if the screen displays "0" clicking 0 another time shouldn't add any digits
         if (digitButton.innerHTML !== "0") {
@@ -327,6 +329,8 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
             displayResult(result);
         }
 
+        // user can't make a decimal out of the current number because it is the result of the previous operation
+        canDecimal = false;
 
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
@@ -342,19 +346,9 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
 
         // the operator that is clicked becomes a new operator
         operator = operatorButton.innerHTML;
-
-        console.log("operator", operator);
-        console.log("numA", numA);
-        console.log("numB", numB);
-        console.log("newNum:", newNum);
     }
     else if (numA !== null && operator === null) {
         operator = operatorButton.innerHTML;
-
-        console.log("operator", operator);
-        console.log("numA", numA);
-        console.log("numB", numB);
-        console.log("newNum:", newNum);
     }
 }))
 
@@ -373,6 +367,9 @@ equalButton.addEventListener("click", () => {
             displayResult(result);
         }
 
+        // user can't make a decimal out of the current number because it is the result of the previous operation
+        canDecimal = false;
+
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
         numA = stringToNumber(screenContent);
@@ -387,11 +384,6 @@ equalButton.addEventListener("click", () => {
         numB = null;
 
         operator = null;
-
-        console.log("operator", operator);
-        console.log("numA", numA);
-        console.log("numB", numB);
-        console.log("newNum:", newNum);
     }
 })
 
@@ -402,13 +394,6 @@ equalButton.addEventListener("click", () => {
 TODO
 - percent functionality:
 currently displayed number (A or B) is displayed divded by 100 and is stored in a variable
-
-- equal sign behavior:
-if numA !== null && numB !== null:
-it displayes the result
-operator becomes null
-the result becomes numA
-numB becomes null
 
 - clear functionality:
 clears the curret number and makes it 0
