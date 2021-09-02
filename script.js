@@ -44,7 +44,7 @@ const operate = (a, operator, b) => {
     else if (operator === "-") {
         return subtract(a, b);
     }
-    else if (operator === "*") {
+    else if (operator === "x") {
         return multiply(a, b);
     }
     else if (operator === "÷") {
@@ -297,33 +297,54 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
     // and added to the one that is clicked
     operatorButton.classList.add("orange-btn-operator-on");
 
-    // if numA is null
-    // numA will become the screenContent converted to a number
-    screenContent = minusField.innerHTML + inputField.innerHTML;
-    numA = stringToNumber(screenContent);
+    // case where we do not perform an operation yet, until the second number is typed in and another operator pressed
+    if (numA === null) {
+        // numA will become the screenContent converted to a number
+        screenContent = minusField.innerHTML + inputField.innerHTML;
+        numA = stringToNumber(screenContent);
 
-    // clicked operator's html will be stored in an operator variable
-    operator = operatorButton.innerHTML;
+        // clicked operator's html will be stored in an operator variable
+        operator = operatorButton.innerHTML;
 
-    // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
-    // isNegative becomes false to so that the first press of +/- button behaves properly when the second number is typed in
-    // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
-    newNum = true;
-    isNegative = false;
-    numberOfDigits = 1;
+        // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
+        // isNegative becomes false to so that the first press of +/- button behaves properly when the second number is typed in
+        // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
+        newNum = true;
+        isNegative = false;
+        numberOfDigits = 1;
+    }
+    // if numA is not null and the operator is pressed
+    else {
+        // numB becomes the screenContent converted to a number
+        screenContent = minusField.innerHTML + inputField.innerHTML;
+        numB = stringToNumber(screenContent);
 
+        // numA and numB are operated
+        result = operate(numA, operator, numB);
 
-    /*
-   TODO:
-   - if numA is not null and the operator is pressed:
-   - numB will become the screenContent converted to the number
-   - numA and numB will be operated on with the operator: result = operate(numA, operator, numB)
-   - the value of result will be converted to string and displayed on the screen: displayresult(result)
-   - this value will then become numA
-   - numB will become null again
-   - the new operator will become an operator: operator = operatorButton.innerHTML; - this line again
-   */
+        // the value of result is converted to string and displayed on the screen
+        displayResult(result);
+
+        // the result becomes the new numA
+        screenContent = minusField.innerHTML + inputField.innerHTML;
+        numA = stringToNumber(screenContent);
+
+        // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
+        newNum = true;
+        isNegative = false;
+        numberOfDigits = 1;
+
+        // numB becomes null again
+        numB = null;
+
+        // the operator that is clicked becomes a new operator
+        operator = operatorButton.innerHTML;
+    }
 }))
+
+
+
+
 
 /*
 TODO
