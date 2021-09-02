@@ -314,7 +314,7 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
         numberOfDigits = 1;
     }
     // if numA is not null and the operator is pressed
-    else {
+    else if (numA !== null && operator !== null) {
         // numB becomes the screenContent converted to a number
         screenContent = minusField.innerHTML + inputField.innerHTML;
         numB = stringToNumber(screenContent);
@@ -340,11 +340,43 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
         // the operator that is clicked becomes a new operator
         operator = operatorButton.innerHTML;
     }
+    else if (numA !== null && operator === null) {
+        operator = operatorButton.innerHTML;
+    }
 }))
 
+const equalButton = document.querySelector(".equal");
+equalButton.addEventListener("click", () => {
+    if (numA !== null) {
+        // numB becomes the screenContent converted to a number
+        screenContent = minusField.innerHTML + inputField.innerHTML;
+        numB = stringToNumber(screenContent);
 
+        // numA and numB are operated
+        result = operate(numA, operator, numB);
 
+        // the value of result is converted to string and displayed on the screen
+        displayResult(result);
 
+        // the result becomes the new numA
+        screenContent = minusField.innerHTML + inputField.innerHTML;
+        numA = stringToNumber(screenContent);
+        console.log("numA after equal pressed:", numA);
+
+        // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
+        newNum = true;
+        isNegative = false;
+        numberOfDigits = 1;
+
+        // numB becomes null again
+        numB = null;
+
+        operator = null;
+    }
+})
+
+// PROBLEM 6 - 9 = -3
+// 
 
 /*
 TODO
