@@ -323,7 +323,10 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
         result = operate(numA, operator, numB);
 
         // the value of result is converted to string and displayed on the screen
-        displayResult(result);
+        if (result !== undefined) {
+            displayResult(result);
+        }
+
 
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
@@ -339,9 +342,19 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
 
         // the operator that is clicked becomes a new operator
         operator = operatorButton.innerHTML;
+
+        console.log("operator", operator);
+        console.log("numA", numA);
+        console.log("numB", numB);
+        console.log("newNum:", newNum);
     }
     else if (numA !== null && operator === null) {
         operator = operatorButton.innerHTML;
+
+        console.log("operator", operator);
+        console.log("numA", numA);
+        console.log("numB", numB);
+        console.log("newNum:", newNum);
     }
 }))
 
@@ -356,7 +369,9 @@ equalButton.addEventListener("click", () => {
         result = operate(numA, operator, numB);
 
         // the value of result is converted to string and displayed on the screen
-        displayResult(result);
+        if (result !== undefined) {
+            displayResult(result);
+        }
 
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
@@ -372,10 +387,15 @@ equalButton.addEventListener("click", () => {
         numB = null;
 
         operator = null;
+
+        console.log("operator", operator);
+        console.log("numA", numA);
+        console.log("numB", numB);
+        console.log("newNum:", newNum);
     }
 })
 
-// PROBLEM 6 - 9 = -3
+// comma can't be typed in on numA when it is on the screen:
 // 
 
 /*
@@ -396,3 +416,4 @@ if numA is null && screen === "0": nothing happens when pressed; shows AC
 if numA is null && screen !== "0": screen becomes "0" when pressed; shows C -> AC; newNum becomes true; number of digits becomes 1
 if numA !== null: screen becomes "0" when pressed; shows C -> AC; the operator stays on; numA actually stays the same
 */
+
