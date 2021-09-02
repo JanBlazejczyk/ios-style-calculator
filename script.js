@@ -138,6 +138,7 @@ commaButton.addEventListener("click", () => {
     if (isDecimal === false && canDecimal === false) {
         isDecimal = true;
         inputField.innerHTML = "0,"
+        newNum = false;
     }
     else if (isDecimal === false && canDecimal === true) {
         isDecimal = true;
@@ -150,16 +151,17 @@ commaButton.addEventListener("click", () => {
 // if the number is negative the minus sign disappears from the beggining of the number
 const plusMinusButton = document.querySelector("#btn-plus-minus");
 const minusField = document.querySelector(".minus-input-field")
-let isNegative = false;
 
 plusMinusButton.addEventListener("click", () => {
-    if (isNegative === false) {
-        minusField.insertAdjacentHTML("beforeend", "-");
-        isNegative = true;
-    } else {
-        minusField.innerHTML = "";
-        isNegative = false;
+    if (newNum === false && inputField.innerHTML !== "0") {
+        if (minusField.innerHTML === "-") {
+            minusField.innerHTML = "";
+        }
+        else {
+            minusField.innerHTML = "-"
+        }
     }
+
 })
 
 // event listener for clicking any of the digit buttons
@@ -183,6 +185,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         if (minusField.innerHTML = "-") {
             minusField.innerHTML = "";
         }
+
         inputField.innerHTML = digitButton.innerHTML;
         // user started to input a new number and this will be false until any operator is pressed again
         newNum = false;
@@ -309,10 +312,8 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
         operator = operatorButton.innerHTML;
 
         // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
-        // isNegative becomes false to so that the first press of +/- button behaves properly when the second number is typed in
         // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
         newNum = true;
-        isNegative = false;
         numberOfDigits = 1;
     }
     // if numA is not null and the operator is pressed
@@ -338,7 +339,6 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
 
         // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
         newNum = true;
-        isNegative = false;
         numberOfDigits = 1;
 
         // numB becomes null again
@@ -373,25 +373,27 @@ equalButton.addEventListener("click", () => {
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
         numA = stringToNumber(screenContent);
-        console.log("numA after equal pressed:", numA);
 
         // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
         newNum = true;
-        isNegative = false;
         numberOfDigits = 1;
 
         // numB becomes null again
         numB = null;
 
+        // operator becomes null again
         operator = null;
     }
 })
 
-// comma can't be typed in on numA when it is on the screen:
-// 
-
 /*
 TODO
+- minus functionality:
+-0 should keep a minus whan another digit is clicked
+- when numA is not null perssing the +/- should
+
+
+
 - percent functionality:
 currently displayed number (A or B) is displayed divded by 100 and is stored in a variable
 
