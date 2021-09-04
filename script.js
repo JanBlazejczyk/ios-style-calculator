@@ -513,10 +513,3 @@ clearButton.addEventListener("click", () => {
     // display "all clear again"
     clearButton.innerHTML = "AC";
 })
-
-/*
-TODO
-- media query for mobile
-- favicon
-*/
-
