@@ -58,6 +58,12 @@ body {
     font-size: 2.7rem;
 }
 
+.input-field-error-message {
+    color: red;
+    font-weight: 450;
+    font-size: 1.5rem;
+}
+
 .minus-input-field {
     color: white;
     font-size: 3.5rem;
@@ -110,6 +116,11 @@ button {
 .orange-btn {
     background-color: var(--orange-btn-color);
     color: white;
+}
+
+.orange-btn-operator-on {
+    color: var(--orange-btn-color);
+    background-color: white;
 }
 
 .dark-grey-btn {
