@@ -103,24 +103,31 @@ const displayResult = (result) => {
             const numAString = numA.toString();
             const numAList = numAString.split("");
             const decimalIndexA = numAList.indexOf(".");
-            console.log("decimalIndexA:", decimalIndexA);
 
             const numBString = numB.toString();
             const numBList = numBString.split("");
             const decimalIndexB = numBList.indexOf(".");
-            console.log("decimalIndexB:", decimalIndexB);
+
 
 
             // figure out the number of decimal places in both numbers
             let numberOfDecimalPlacesA = 0
             let numberOfDecimalPlacesB = 0;
             if (decimalIndexA !== -1) {
-                numberOfDecimalPlacesA = numAList.length - decimalIndexA + 1;
+                numberOfDecimalPlacesA = numAList.length - decimalIndexA - 1;
             }
 
             if (decimalIndexB !== -1) {
-                numberOfDecimalPlacesB = numBList.length - decimalIndexB + 1;
+                numberOfDecimalPlacesB = numBList.length - decimalIndexB - 1;
             }
+            console.log("numA:", numA);
+            console.log("numA list lenght:", numAList.length);
+            console.log("decimalIndexA:", decimalIndexA);
+            console.log("number of decimal places A:", numberOfDecimalPlacesA);
+            console.log("numB:", numB);
+            console.log("numB list lenght:", numBList.length);
+            console.log("decimalIndexB:", decimalIndexB);
+            console.log("number of decimal places B:", numberOfDecimalPlacesB);
 
             // figure out the number of decimal places to round the result to
             const rounder = Math.max(numberOfDecimalPlacesA, numberOfDecimalPlacesB);
@@ -260,7 +267,6 @@ const inputField = document.querySelector(".digit-input-field");
 // variable that monitors the number of digits on the screen
 // it is used to put spaces in the correct places
 let numberOfDigits = 1;
-console.log(numberOfDigits);
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {
     // when a digit button is pressed all operator buttons must appear off
@@ -334,7 +340,6 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            console.log(numberOfDigits);
         }
         // do not add spaces after the comma
         else {
@@ -354,7 +359,6 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            console.log(numberOfDigits);
         }
     }
 }
