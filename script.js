@@ -83,12 +83,11 @@ const stringToNumber = (string) => {
 // takes a number and displays the number converted to string
 // the result is the output to the calculator screen so it adds the spaces
 // and replaces dots with commas to correspond to the calculator comma button
-
-// TODO: should display the result with the correct class
 const displayResult = (result) => {
     // when the result is bigger than 999 999 999 or smaller than 0,00000001 the number should be converted to the exponential
+    // toExponential() converts the number to a string so the further conversion iss not needed
     if (result > 999999999 || result < 0.00000001) {
-        const exponentialToDisplay = result.toExponential();
+        const exponentialToDisplay = result.toExponential(1);
         inputField.innerHTML = exponentialToDisplay;
         return exponentialToDisplay;
     }
@@ -124,6 +123,7 @@ const displayResult = (result) => {
             }
         }
         // place the spaces in the correct places in the list
+        // give the displayed result the proper font size
         if (numOfDigitsBeforeComma === 5) {
             resultList.splice(2, 0, " ");
         }
@@ -133,14 +133,20 @@ const displayResult = (result) => {
         else if (numOfDigitsBeforeComma === 7) {
             resultList.splice(1, 0, " ");
             resultList.splice(5, 0, " ");
+            inputField.classList.add("input-field-smaller");
+            minusField.classList.add("minus-input-field-smaller");
         }
         else if (numOfDigitsBeforeComma === 8) {
             resultList.splice(2, 0, " ");
             resultList.splice(6, 0, " ");
+            inputField.classList.add("input-field-smallest");
+            minusField.classList.add("minus-input-field-smallest");
         }
         else if (numOfDigitsBeforeComma === 9) {
             resultList.splice(3, 0, " ");
             resultList.splice(7, 0, " ");
+            inputField.classList.add("input-field-smallest");
+            minusField.classList.add("minus-input-field-smallest");
         }
 
         // display the number as a string on the calculator screen
@@ -426,10 +432,6 @@ equalButton.addEventListener("click", () => {
 
 /*
 TODO
-- for bigger or smaller numbers the result should be converted to the exponential: operate()
-- display result function should display the result with the correct class on: displayResult() - make sure it will handle the exponentials
-
-
 - percent functionality:
 currently displayed number (A or B) is displayed divded by 100 and is stored in a variable
 
