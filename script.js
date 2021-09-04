@@ -84,9 +84,9 @@ const stringToNumber = (string) => {
 // the result is the output to the calculator screen so it adds the spaces
 // and replaces dots with commas to correspond to the calculator comma button
 const displayResult = (result) => {
-    // when the result is bigger than 999 999 999 or smaller than 0,00000001 the number should be converted to the exponential
-    // toExponential() converts the number to a string so the further conversion iss not needed
-    if (result > 999999999 || result < 0.00000001) {
+    // when the result is bigger than 999 999 999 or smaller than -0,00000001 the number should be converted to the exponential
+    // toExponential() converts the number to a string so the further conversion is not needed
+    if (result > 999999999 || result < -999999999) {
         const exponentialToDisplay = result.toExponential(1);
         inputField.innerHTML = exponentialToDisplay;
         return exponentialToDisplay;
@@ -149,6 +149,8 @@ const displayResult = (result) => {
             minusField.classList.add("minus-input-field-smallest");
         }
 
+        // PROBLEM: displays very long numbers with very precise decimal
+        // TODO: make it display the number with as many digits after the comma as in the longer number (A or B)
         // display the number as a string on the calculator screen
         const resultToDisplay = resultList.join("");
         if (resultToDisplay === zeroDivisionErrorMessage) {
@@ -430,11 +432,32 @@ equalButton.addEventListener("click", () => {
     }
 })
 
+const percentButton = document.querySelector("#btn-percent");
+percentButton.addEventListener("click", () => {
+    // when the button is clicked get the current screen content (string)
+    screenContent = minusField.innerHTML + inputField.innerHTML;
+    // convert it to a number to perform an operation
+    const numberToGetpercent = stringToNumber(screenContent);
+    // get a percent of the number
+    const percent = getPercent(numberToGetpercent);
+    // display it on the screen (converted to a string)
+    displayResult(percent);
+    // when the percent is displayed, the next input becomes a new number
+    newNumber();
+    // if the operator is not on we store the percent in numA
+    if (operator === null) {
+        numA = percent;
+    }
+    // if the operator is on we store the percent in numB
+    else {
+        numB = percent;
+    }
+
+})
+
+
 /*
 TODO
-- percent functionality:
-currently displayed number (A or B) is displayed divded by 100 and is stored in a variable
-
 - clear functionality:
 clears the curret number and makes it 0
 if numA is null && screen === "0": nothing happens when pressed; shows AC
