@@ -83,66 +83,78 @@ const stringToNumber = (string) => {
 // takes a number and displays the number converted to string
 // the result is the output to the calculator screen so it adds the spaces
 // and replaces dots with commas to correspond to the calculator comma button
+
 // TODO: should display the result with the correct class
 const displayResult = (result) => {
-    const resultInitialString = result.toString();
-    // create a list of characters
-    const resultList = resultInitialString.split("");
-    // replace the commas with a dot
-    for (i = 0; i < resultList.length; i++) {
-        if (resultList[i] === ".") {
-            resultList[i] = ",";
-            break;
-        }
-    }
-    // if the number is less than 0
-    // display the minus in a separate HTML element
-    // remove the minus from the character array in order not to duplicate it
-    if (resultList[0] === "-") {
-        minusField.innerHTML = "-";
-        resultList.shift();
+    // when the result is bigger than 999 999 999 or smaller than 0,00000001 the number should be converted to the exponential
+    if (result > 999999999 || result < 0.00000001) {
+        const exponentialToDisplay = result.toExponential();
+        inputField.innerHTML = exponentialToDisplay;
+        return exponentialToDisplay;
     }
     else {
-        minusField.innerHTML = "";
-    }
-    // iterate through list items and count the digits that appear before the first comma
-    let numOfDigitsBeforeComma = 0;
-    for (element of resultList) {
-        if (element !== ",") {
-            numOfDigitsBeforeComma += 1;
+        const resultInitialString = result.toString();
+        // create a list of characters
+        const resultList = resultInitialString.split("");
+        // replace the commas with a dot
+        for (i = 0; i < resultList.length; i++) {
+            if (resultList[i] === ".") {
+                resultList[i] = ",";
+                break;
+            }
+        }
+        // if the number is less than 0
+        // display the minus in a separate HTML element
+        // remove the minus from the character array in order not to duplicate it
+        if (resultList[0] === "-") {
+            minusField.innerHTML = "-";
+            resultList.shift();
         }
         else {
-            break;
+            minusField.innerHTML = "";
         }
-    }
-    // place the spaces in the correct places in the list
-    if (numOfDigitsBeforeComma === 5) {
-        resultList.splice(2, 0, " ");
-    }
-    else if (numOfDigitsBeforeComma === 6) {
-        resultList.splice(3, 0, " ");
-    }
-    else if (numOfDigitsBeforeComma === 7) {
-        resultList.splice(1, 0, " ");
-        resultList.splice(5, 0, " ");
-    }
-    else if (numOfDigitsBeforeComma === 8) {
-        resultList.splice(2, 0, " ");
-        resultList.splice(6, 0, " ");
-    }
-    else if (numOfDigitsBeforeComma === 9) {
-        resultList.splice(3, 0, " ");
-        resultList.splice(7, 0, " ");
-    }
+        // iterate through list items and count the digits that appear before the first comma
+        let numOfDigitsBeforeComma = 0;
+        for (element of resultList) {
+            if (element !== ",") {
+                numOfDigitsBeforeComma += 1;
+            }
+            else {
+                break;
+            }
+        }
+        // place the spaces in the correct places in the list
+        if (numOfDigitsBeforeComma === 5) {
+            resultList.splice(2, 0, " ");
+        }
+        else if (numOfDigitsBeforeComma === 6) {
+            resultList.splice(3, 0, " ");
+        }
+        else if (numOfDigitsBeforeComma === 7) {
+            resultList.splice(1, 0, " ");
+            resultList.splice(5, 0, " ");
+        }
+        else if (numOfDigitsBeforeComma === 8) {
+            resultList.splice(2, 0, " ");
+            resultList.splice(6, 0, " ");
+        }
+        else if (numOfDigitsBeforeComma === 9) {
+            resultList.splice(3, 0, " ");
+            resultList.splice(7, 0, " ");
+        }
 
-    // display the number as a string on the calculator screen
-    const resultToDisplay = resultList.join("");
-    if (resultToDisplay === zeroDivisionErrorMessage) {
-        inputField.classList.add("input-field-error-message");
+        // display the number as a string on the calculator screen
+        const resultToDisplay = resultList.join("");
+        if (resultToDisplay === zeroDivisionErrorMessage) {
+            inputField.classList.add("input-field-error-message");
+        }
+        inputField.innerHTML = resultToDisplay;
+        return resultToDisplay;
     }
-    inputField.innerHTML = resultToDisplay;
-    return resultToDisplay;
 }
+
+
+
 
 
 // DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals
@@ -414,8 +426,8 @@ equalButton.addEventListener("click", () => {
 
 /*
 TODO
-- for bigger or smaller numbers the result should be converted to the exponential
-- display result function should display the result with the correct class on
+- for bigger or smaller numbers the result should be converted to the exponential: operate()
+- display result function should display the result with the correct class on: displayResult() - make sure it will handle the exponentials
 
 
 - percent functionality:
@@ -426,5 +438,7 @@ clears the curret number and makes it 0
 if numA is null && screen === "0": nothing happens when pressed; shows AC
 if numA is null && screen !== "0": screen becomes "0" when pressed; shows C -> AC; newNum becomes true; number of digits becomes 1
 if numA !== null: screen becomes "0" when pressed; shows C -> AC; the operator stays on; numA actually stays the same
+
+- media query for mobile
 */
 
