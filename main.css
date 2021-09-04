@@ -247,7 +247,7 @@ make the numbers smaller
     .input-field-error-message {
         color: red;
         font-weight: 450;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
     .minus-input-field {
@@ -308,7 +308,7 @@ make the numbers smaller
     .input-field-error-message {
         color: red;
         font-weight: 450;
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
     
     .minus-input-field {
@@ -327,7 +327,70 @@ make the numbers smaller
     }
 }
 
-/* less than 400px height */
+/* less than 390px height */
 @media (max-height: 390px) {
+    h1 {
+        font-size: 1.2rem;
+    }
 
-} 
+    h3 {
+        font-size: 0.7rem;
+    }
+
+    button {
+        font-size: 0.7rem;
+    }
+}
+
+/* less than 365 height */
+@media (max-height: 365px) {
+    .digit-input-field {
+        color: white;
+        font-weight: 450;
+        font-size: 1.5rem;
+    }
+    
+    .input-field-smaller {
+        color: white;
+        font-weight: 450;
+        font-size: 1.2rem;
+    }
+    
+    .input-field-smallest {
+        color: white;
+        font-weight: 450;
+        font-size: 1rem;
+    }
+    
+    .input-field-error-message {
+        color: red;
+        font-weight: 450;
+        font-size: 0.7rem;
+    }
+    
+    .minus-input-field {
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .minus-input-field-smaller {
+        color: white;
+        font-size: 1.2rem;
+    }
+    
+    .minus-input-field-smallest {
+        color: white;
+        font-size: 1rem;
+    }
+
+    h1 {
+        font-size: 1rem;
+    }
+
+    h3 {
+        font-size: 0.7rem;
+    }
+
+    button {
+        font-size: 0.5rem;
+    }}
