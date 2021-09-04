@@ -129,3 +129,14 @@ button {
 .dark-grey-btn:hover {
     opacity: 0.7;
 }
+
+@media (max-width: 480px) {
+    body {
+        background-color: var(--calc-background-color);
+    }
+
+    #main-container {
+        width: 90vw;
+        height: 90vh;
+    }
+}
