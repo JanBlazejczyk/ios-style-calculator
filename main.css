@@ -9,10 +9,28 @@
 /* positioning of the whole calculator */
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     height: 100vh;
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #d2d3ce;
+}
+
+h1 {
+    color: var(--calc-background-color);
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 2.3rem;
+    display: block;
+    margin-bottom: 2.3rem;
+}
+
+h3 {
+    color: var(--calc-background-color);
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 1.5rem;
+    display: block;
+    margin-top: 2.3rem;
 }
 
 /* size and color of the calculator */
@@ -151,4 +169,3 @@ button {
         height: 90vh;
     }
 }
-/* test */
