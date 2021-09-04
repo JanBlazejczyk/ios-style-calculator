@@ -12,6 +12,7 @@ const multiply = (a, b) => {
     return a * b;
 }
 
+// when the user tries to divide by 0 the result is a message
 const zeroDivisionErrorMessage = "Go back to school:)"
 const divide = (a, b) => {
     if (b !== 0) {
@@ -50,6 +51,7 @@ const newNumber = () => {
     numberOfDigits = 1;
 }
 
+// funtion to reset the size of the digits
 const resetFontSizeClasses = () => {
     inputField.classList.remove("input-field-error-message");
     inputField.classList.remove("input-field-smallest");
@@ -59,7 +61,7 @@ const resetFontSizeClasses = () => {
 }
 
 // function to switch a string to a number
-// it uses the input from the calculator screen so it removes the spaces
+// it uses the content from the calculator screen so it removes the spaces
 // and replaces commas with dots to represent a correct decimal
 const stringToNumber = (string) => {
     // convert string to list
@@ -81,18 +83,53 @@ const stringToNumber = (string) => {
 
 // function for displaying the result of an operation on the calculator screen
 // takes a number and displays the number converted to string
-// the result is the output to the calculator screen so it adds the spaces
+// the result is the output to the calculator screen so it adds the spaces in the correct places
 // and replaces dots with commas to correspond to the calculator comma button
 const displayResult = (result) => {
-    // when the result is bigger than 999 999 999 or smaller than 0,00000001 the number should be converted to the exponential
-    // toExponential() converts the number to a string so the further conversion iss not needed
-    if (result > 999999999 || result < 0.00000001) {
+    // when the result is bigger than 999 999 999 or smaller than -0,00000001 the number should be converted to the exponential
+    // toExponential() converts the number to a string so the further conversion is not needed
+    // and the exponential is displayed on the screen
+    if (result > 999999999 || result < -999999999) {
         const exponentialToDisplay = result.toExponential(1);
         inputField.innerHTML = exponentialToDisplay;
         return exponentialToDisplay;
     }
     else {
-        const resultInitialString = result.toString();
+        let resultInitialString = result.toString();
+        // some numbers are not as big or as small to become exponentials
+        // but they are long because of the number of decimals spaces and may overflow the screen
+        // if the number has more than 9 digits (in case of negative numbers there's a "-"" at the beggining)
+        if ((resultInitialString.length > 10 && result < 0) || (resultInitialString.length > 9 && result >= 0)) {
+            // convert the numbers that we operate on to lists
+            // figure out the index of the decimal point
+            if (numB !== null) {
+                const numAString = numA.toString();
+                const numAList = numAString.split("");
+                const decimalIndexA = numAList.indexOf(".");
+
+                const numBString = numB.toString();
+                const numBList = numBString.split("");
+                const decimalIndexB = numBList.indexOf(".");
+
+                // figure out the number of decimal places in both numbers
+                let numberOfDecimalPlacesA = 0
+                let numberOfDecimalPlacesB = 0;
+                if (decimalIndexA !== -1) {
+                    numberOfDecimalPlacesA = numAList.length - decimalIndexA - 1;
+                }
+
+                if (decimalIndexB !== -1) {
+                    numberOfDecimalPlacesB = numBList.length - decimalIndexB - 1;
+                }
+                // figure out the number of decimal places to round the result to
+                const rounder = Math.max(numberOfDecimalPlacesA, numberOfDecimalPlacesB);
+                // round the result and override the resultInitialString
+                roundedResult = result.toFixed(rounder);
+                resultInitialString = roundedResult.toString();
+            }
+
+        }
+
         // create a list of characters
         const resultList = resultInitialString.split("");
         // replace the commas with a dot
@@ -112,6 +149,7 @@ const displayResult = (result) => {
         else {
             minusField.innerHTML = "";
         }
+
         // iterate through list items and count the digits that appear before the first comma
         let numOfDigitsBeforeComma = 0;
         for (element of resultList) {
@@ -123,7 +161,6 @@ const displayResult = (result) => {
             }
         }
         // place the spaces in the correct places in the list
-        // give the displayed result the proper font size
         if (numOfDigitsBeforeComma === 5) {
             resultList.splice(2, 0, " ");
         }
@@ -133,8 +170,6 @@ const displayResult = (result) => {
         else if (numOfDigitsBeforeComma === 7) {
             resultList.splice(1, 0, " ");
             resultList.splice(5, 0, " ");
-            inputField.classList.add("input-field-smaller");
-            minusField.classList.add("minus-input-field-smaller");
         }
         else if (numOfDigitsBeforeComma === 8) {
             resultList.splice(2, 0, " ");
@@ -149,19 +184,30 @@ const displayResult = (result) => {
             minusField.classList.add("minus-input-field-smallest");
         }
 
+        // give the displayed result the proper font size
+        if (resultList.length === 7) {
+            inputField.classList.add("input-field-smaller");
+            minusField.classList.add("minus-input-field-smaller");
+        }
+        else if (resultList.length === 8) {
+            inputField.classList.add("input-field-smallest");
+            minusField.classList.add("minus-input-field-smallest");
+        }
+        else if (resultList.length >= 9) {
+            inputField.classList.add("input-field-smallest");
+            minusField.classList.add("minus-input-field-smallest");
+        }
+
         // display the number as a string on the calculator screen
         const resultToDisplay = resultList.join("");
         if (resultToDisplay === zeroDivisionErrorMessage) {
             inputField.classList.add("input-field-error-message");
         }
+
         inputField.innerHTML = resultToDisplay;
         return resultToDisplay;
     }
 }
-
-
-
-
 
 // DISPLAY FUNCTIONALITY - clicking digit buttons, comma and minus, displays numbers and decimals
 // comma can appear on the screen only once, and when there is already some number
@@ -198,7 +244,6 @@ plusMinusButton.addEventListener("click", () => {
             minusField.innerHTML = "-"
         }
     }
-
 })
 
 // event listener for clicking any of the digit buttons
@@ -214,7 +259,8 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
     operatorButtons.forEach((operatorButton) => {
         operatorButton.classList.remove("orange-btn-operator-on");
     })
-
+    // and the clear button now has something to clear and indicates it
+    clearButton.innerHTML = "C";
     // if the newNum is true we stored one number and the operator is clicked
     // the user will now enter a new number
     if (newNum === true || inputField.innerHTML === "0") {
@@ -224,40 +270,35 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         if (minusField.innerHTML = "-") {
             minusField.innerHTML = "";
         }
-
+        // the first digit is displayed on the screen instead of a "0"
         inputField.innerHTML = digitButton.innerHTML;
-        // user started to input a new number and this will be false until any operator is pressed again
+        // user started to input a new number and this will be false until any operator is pressed
         newNum = false;
 
         // new number is not a deciaml at the beggining
         isDecimal = false;
 
-        // user can make a decimal out of the new number
+        // user can make a decimal and percent out of the new number
         canDecimal = true;
-
-        // if the screen displays "0" clicking 0 another time shouldn't add any digits
-        if (digitButton.innerHTML !== "0") {
-            numberOfDigits += 1;
-        }
-
+        canPercent = true;
     }
     // some number is already in
     else {
         // add spaces before the comma
         if (isDecimal === false) {
-            if (numberOfDigits === 5) {
+            if (numberOfDigits === 4) {
                 let spacedInput = inputField.innerHTML.slice(0, 2) + " " + inputField.innerHTML.slice(2);
                 inputField.innerHTML = spacedInput;
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 6) {
+            else if (numberOfDigits === 5) {
                 let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4);
                 inputField.innerHTML = spacedInput;
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 7) {
+            else if (numberOfDigits === 6) {
                 inputField.classList.add("input-field-smaller");
                 minusField.classList.add("minus-input-field-smaller");
                 let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
@@ -266,7 +307,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 8) {
+            else if (numberOfDigits === 7) {
                 inputField.classList.add("input-field-smallest");
                 minusField.classList.add("minus-input-field-smallest");
                 let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
@@ -275,7 +316,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 9) {
+            else if (numberOfDigits === 8) {
                 let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4, 6) +
                     inputField.innerHTML.slice(7, 8) + " " + inputField.innerHTML.slice(8);
                 inputField.innerHTML = spacedInput;
@@ -283,7 +324,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 numberOfDigits += 1;
             }
 
-            else if (numberOfDigits < 10) {
+            else if (numberOfDigits < 9) {
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
@@ -302,14 +343,13 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits < 10) {
+            else if (numberOfDigits < 9) {
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
         }
     }
-}
-))
+}))
 
 // CONDUCTING MATH OPERATIONS FUNCTIONALITY
 // variable for storing an operator string
@@ -323,16 +363,17 @@ let screenContent = null;
 // instead of adding digits to the existing one
 let newNum = false;
 
+// event listener for clicking any of the operator buttons
+// that will handle storing numbers in variables and conducting math operations on them
 const operatorButtons = document.querySelectorAll(".operator");
 operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("click", () => {
-
+    clearButton.innerHTML = "C";
     // when the operator button is clicked the class is removed from any other operator button that might be on
     operatorButtons.forEach((operatorButton) => {
         operatorButton.classList.remove("orange-btn-operator-on");
     })
     // and added to the one that is clicked
     operatorButton.classList.add("orange-btn-operator-on");
-
     // case where we do not perform an operation yet, until the second number is typed in and another operator pressed
     if (numA === null) {
         // numA will become the screenContent converted to a number
@@ -340,73 +381,66 @@ operatorButtons.forEach((operatorButton) => operatorButton.addEventListener("cli
         if (screenContent !== zeroDivisionErrorMessage) {
             numA = stringToNumber(screenContent);
         }
-
-
         // clicked operator's html will be stored in an operator variable
         operator = operatorButton.innerHTML;
-
         // newNum tells the DISPLAY FUNCTIONALITY to start entering a new number if the user presses any digit button
         // number of digits is reset to tell the DISPLAY FUNCTIONALITY to put spaces in the correct places
         newNumber();
     }
-    // if numA is not null and the operator is pressed
+    // if numA is stored and the operator is active
     else if (numA !== null && operator !== null) {
         // numB becomes the screenContent converted to a number
         screenContent = minusField.innerHTML + inputField.innerHTML;
         numB = stringToNumber(screenContent);
-
-        // numA and numB are operated
+        // numA and numB are operated on
         result = operate(numA, operator, numB);
-
         // the value of result is converted to string and displayed on the screen
         if (result !== undefined) {
             displayResult(result);
         }
-
         // user can't make a decimal out of the current number because it is the result of the previous operation
         canDecimal = false;
-
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
+        // if the screen contains 0 division error message, do not store it in numA variable
+        // as it leads to NaN being the result of the next operation
         if (screenContent !== zeroDivisionErrorMessage) {
             numA = stringToNumber(screenContent);
         }
         else {
             numA = null;
         }
-
         // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
         newNumber();
-
-        // numB becomes null again
         numB = null;
-
         // the operator that is clicked becomes a new operator
         operator = operatorButton.innerHTML;
     }
+    // if numA is stored and the operator is not already active, the pressed operator becomes the current operator
     else if (numA !== null && operator === null) {
         operator = operatorButton.innerHTML;
     }
 }))
 
+// event listener for clicking the equal button
+// that will behave similar to clicking the operator when the result of the previous operation
+// is already on the screen, but this time all the operator buttons will become off
+// and operator will become null
 const equalButton = document.querySelector(".equal");
 equalButton.addEventListener("click", () => {
+    // it works only when numA is stored
     if (numA !== null) {
         // numB becomes the screenContent converted to a number
         screenContent = minusField.innerHTML + inputField.innerHTML;
         numB = stringToNumber(screenContent);
-
-        // numA and numB are operated
+        // numA and numB are operated on
         result = operate(numA, operator, numB);
-
         // the value of result is converted to string and displayed on the screen
         if (result !== undefined) {
             displayResult(result);
         }
-
         // user can't make a decimal out of the current number because it is the result of the previous operation
         canDecimal = false;
-
         // the result becomes the new numA
         screenContent = minusField.innerHTML + inputField.innerHTML;
         if (screenContent !== zeroDivisionErrorMessage) {
@@ -415,13 +449,10 @@ equalButton.addEventListener("click", () => {
         else {
             numA = null;
         }
-
         // this tells the DISPLAY functionality that we have a new numA and to start entering a new number
         newNumber();
-
         // numB becomes null again
         numB = null;
-
         // operator becomes null again
         operator = null;
         operatorButtons.forEach((operatorButton) => {
@@ -430,17 +461,62 @@ equalButton.addEventListener("click", () => {
     }
 })
 
+// variable to check if the user can make a percentage out of the number
+let canPercent = true;
+// event listener for clicking the percent button
+// that will show the number that is currently displayed divided by 100
+const percentButton = document.querySelector("#btn-percent");
+percentButton.addEventListener("click", () => {
+    if (canPercent === true) {
+        // when the button is clicked get the current screen content (string)
+        screenContent = minusField.innerHTML + inputField.innerHTML;
+        // convert it to a number to perform an operation
+        const numberToGetpercent = stringToNumber(screenContent);
+        // get a percent of the number
+        const percent = getPercent(numberToGetpercent);
+        // display it on the screen (converted to a string)
+        displayResult(percent);
+        // when the percent is displayed, the next input becomes a new number
+        newNumber();
+        // if the operator is not on we store the percent in numA
+        if (operator === null) {
+            numA = percent;
+        }
+        // if the operator is on we store the percent in numB
+        else {
+            numB = percent;
+        }
+        // user can make a percent out of the result, becomes true when the user starts inputing a new number
+        canPercent = false;
+    }
+})
+// event listener for the clear button that will reset everything to the initial stage
+const clearButton = document.querySelector("#btn-clear");
+clearButton.addEventListener("click", () => {
+    // clear the screen
+    minusField.innerHTML = "";
+    inputField.innerHTML = "0";
+    // clear the operand
+    operator = null;
+    operatorButtons.forEach((operatorButton) => {
+        operatorButton.classList.remove("orange-btn-operator-on");
+    })
+    // clear numA and numB
+    numA = null;
+    numB = null;
+    // enable making the new button a decimal
+    isDecimal = false;
+    canDecimal = true;
+    newNumber();
+    // reset the font size to the initial value
+    resetFontSizeClasses();
+    // display "all clear again"
+    clearButton.innerHTML = "AC";
+})
+
 /*
 TODO
-- percent functionality:
-currently displayed number (A or B) is displayed divded by 100 and is stored in a variable
-
-- clear functionality:
-clears the curret number and makes it 0
-if numA is null && screen === "0": nothing happens when pressed; shows AC
-if numA is null && screen !== "0": screen becomes "0" when pressed; shows C -> AC; newNum becomes true; number of digits becomes 1
-if numA !== null: screen becomes "0" when pressed; shows C -> AC; the operator stays on; numA actually stays the same
-
 - media query for mobile
+- favicon
 */
 
