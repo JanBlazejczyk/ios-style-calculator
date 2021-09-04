@@ -31,15 +31,14 @@ h3 {
     font-size: 1.5rem;
     display: block;
     margin-top: 2.3rem;
+    margin-bottom: 2.3rem;
 }
 
 /* size and color of the calculator */
 #main-container {
     background-color: var(--calc-background-color);
-    /* height: 50vh; */
-    /* width: 30vh; */
-    width: 18rem;
-    height: 30rem;
+    width: 15rem;
+    height: 40rem;
     border-radius: 1rem;
     position: relative;
 }
@@ -60,20 +59,20 @@ h3 {
 .digit-input-field {
     color: white;
     font-weight: 450;
-    font-size: 3.5rem;
+    font-size: 3.2rem;
 }
 
 
 .input-field-smaller {
     color: white;
     font-weight: 450;
-    font-size: 3rem;
+    font-size: 2.5rem;
 }
 
 .input-field-smallest {
     color: white;
     font-weight: 450;
-    font-size: 2.7rem;
+    font-size: 2.3rem;
 }
 
 .input-field-error-message {
@@ -84,17 +83,17 @@ h3 {
 
 .minus-input-field {
     color: white;
-    font-size: 3.5rem;
+    font-size: 3.2rem;
 }
 
 .minus-input-field-smaller {
     color: white;
-    font-size: 3rem;
+    font-size: 2.5rem;
 }
 
 .minus-input-field-smallest {
     color: white;
-    font-size: 2.7rem;
+    font-size: 2.3rem;
 }
 
 /* container for all the buttons */
@@ -106,7 +105,7 @@ h3 {
     padding: 0.7rem;
     /* Grid */
     display: grid;
-    grid-gap: 0.9rem;
+    grid-gap: 0.5rem;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 }
@@ -115,7 +114,7 @@ h3 {
 button {
     border-radius: 50%;
     border-style: none;
-    font-weight: 450;
+    font-weight: 420;
     font-size: 1.5rem;
 }
 
