@@ -92,7 +92,47 @@ const displayResult = (result) => {
         return exponentialToDisplay;
     }
     else {
-        const resultInitialString = result.toString();
+        let resultInitialString = result.toString();
+        // some numbers are not as big or as small to become and exponentials
+        // but they are long because of the number of decimals paces and may overflow the screen
+        // if the number has more than 9 digits (in case of negative numbers there's a "-"" at the beggining)
+        if ((resultInitialString.length > 10 && result < 0) || (resultInitialString.length > 9 && result >= 0)) {
+            console.log("Conditional works!")
+            // convert the numbers that we operate on to lists
+            // figure out the index of the decimal point
+            const numAString = numA.toString();
+            const numAList = numAString.split("");
+            const decimalIndexA = numAList.indexOf(".");
+            console.log("decimalIndexA:", decimalIndexA);
+
+            const numBString = numB.toString();
+            const numBList = numBString.split("");
+            const decimalIndexB = numBList.indexOf(".");
+            console.log("decimalIndexB:", decimalIndexB);
+
+
+            // figure out the number of decimal places in both numbers
+            let numberOfDecimalPlacesA = 0
+            let numberOfDecimalPlacesB = 0;
+            if (decimalIndexA !== -1) {
+                numberOfDecimalPlacesA = numAList.length - decimalIndexA + 1;
+            }
+
+            if (decimalIndexB !== -1) {
+                numberOfDecimalPlacesB = numBList.length - decimalIndexB + 1;
+            }
+
+            // figure out the number of decimal places to round the result to
+            const rounder = Math.max(numberOfDecimalPlacesA, numberOfDecimalPlacesB);
+            console.log("Result:", result);
+            console.log("Rounder:", rounder);
+            // round the result and override the resultInitialString
+            roundedResult = result.toFixed(rounder);
+            console.log("Rounded result:", roundedResult);
+            resultInitialString = roundedResult.toString();
+        }
+
+        console.log(resultInitialString);
         // create a list of characters
         const resultList = resultInitialString.split("");
         // replace the commas with a dot
@@ -112,6 +152,7 @@ const displayResult = (result) => {
         else {
             minusField.innerHTML = "";
         }
+
         // iterate through list items and count the digits that appear before the first comma
         let numOfDigitsBeforeComma = 0;
         for (element of resultList) {
@@ -123,7 +164,6 @@ const displayResult = (result) => {
             }
         }
         // place the spaces in the correct places in the list
-        // give the displayed result the proper font size
         if (numOfDigitsBeforeComma === 5) {
             resultList.splice(2, 0, " ");
         }
@@ -133,8 +173,6 @@ const displayResult = (result) => {
         else if (numOfDigitsBeforeComma === 7) {
             resultList.splice(1, 0, " ");
             resultList.splice(5, 0, " ");
-            inputField.classList.add("input-field-smaller");
-            minusField.classList.add("minus-input-field-smaller");
         }
         else if (numOfDigitsBeforeComma === 8) {
             resultList.splice(2, 0, " ");
@@ -149,8 +187,20 @@ const displayResult = (result) => {
             minusField.classList.add("minus-input-field-smallest");
         }
 
-        // PROBLEM: displays very long numbers with very precise decimal
-        // TODO: make it display the number with as many digits after the comma as in the longer number (A or B)
+        // give the displayed result the proper font size
+        if (resultList.length === 7) {
+            inputField.classList.add("input-field-smaller");
+            minusField.classList.add("minus-input-field-smaller");
+        }
+        else if (resultList.length === 8) {
+            inputField.classList.add("input-field-smallest");
+            minusField.classList.add("minus-input-field-smallest");
+        }
+        else if (resultList.length >= 9) {
+            inputField.classList.add("input-field-smallest");
+            minusField.classList.add("minus-input-field-smallest");
+        }
+
         // display the number as a string on the calculator screen
         const resultToDisplay = resultList.join("");
         if (resultToDisplay === zeroDivisionErrorMessage) {
@@ -210,6 +260,7 @@ const inputField = document.querySelector(".digit-input-field");
 // variable that monitors the number of digits on the screen
 // it is used to put spaces in the correct places
 let numberOfDigits = 1;
+console.log(numberOfDigits);
 
 digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () => {
     // when a digit button is pressed all operator buttons must appear off
@@ -236,30 +287,24 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 
         // user can make a decimal out of the new number
         canDecimal = true;
-
-        // if the screen displays "0" clicking 0 another time shouldn't add any digits
-        if (digitButton.innerHTML !== "0") {
-            numberOfDigits += 1;
-        }
-
     }
     // some number is already in
     else {
         // add spaces before the comma
         if (isDecimal === false) {
-            if (numberOfDigits === 5) {
+            if (numberOfDigits === 4) {
                 let spacedInput = inputField.innerHTML.slice(0, 2) + " " + inputField.innerHTML.slice(2);
                 inputField.innerHTML = spacedInput;
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 6) {
+            else if (numberOfDigits === 5) {
                 let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4);
                 inputField.innerHTML = spacedInput;
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 7) {
+            else if (numberOfDigits === 6) {
                 inputField.classList.add("input-field-smaller");
                 minusField.classList.add("minus-input-field-smaller");
                 let spacedInput = inputField.innerHTML.slice(0, 1) + " " + inputField.innerHTML.slice(1, 3) + inputField.innerHTML.slice(4, 5) +
@@ -268,7 +313,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 8) {
+            else if (numberOfDigits === 7) {
                 inputField.classList.add("input-field-smallest");
                 minusField.classList.add("minus-input-field-smallest");
                 let spacedInput = inputField.innerHTML.slice(0, 1) + inputField.innerHTML.slice(2, 3) + " " + inputField.innerHTML.slice(3, 5) +
@@ -277,7 +322,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits === 9) {
+            else if (numberOfDigits === 8) {
                 let spacedInput = inputField.innerHTML.slice(0, 2) + inputField.innerHTML.slice(3, 4) + " " + inputField.innerHTML.slice(4, 6) +
                     inputField.innerHTML.slice(7, 8) + " " + inputField.innerHTML.slice(8);
                 inputField.innerHTML = spacedInput;
@@ -285,10 +330,11 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 numberOfDigits += 1;
             }
 
-            else if (numberOfDigits < 10) {
+            else if (numberOfDigits < 9) {
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
+            console.log(numberOfDigits);
         }
         // do not add spaces after the comma
         else {
@@ -304,10 +350,11 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
-            else if (numberOfDigits < 10) {
+            else if (numberOfDigits < 9) {
                 inputField.insertAdjacentHTML("beforeend", digitButton.innerHTML);
                 numberOfDigits += 1;
             }
+            console.log(numberOfDigits);
         }
     }
 }
