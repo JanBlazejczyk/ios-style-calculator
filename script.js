@@ -93,50 +93,51 @@ const displayResult = (result) => {
     }
     else {
         let resultInitialString = result.toString();
-        // some numbers are not as big or as small to become and exponentials
-        // but they are long because of the number of decimals paces and may overflow the screen
+        // some numbers are not as big or as small to become exponentials
+        // but they are long because of the number of decimals spaces and may overflow the screen
         // if the number has more than 9 digits (in case of negative numbers there's a "-"" at the beggining)
         if ((resultInitialString.length > 10 && result < 0) || (resultInitialString.length > 9 && result >= 0)) {
             console.log("Conditional works!")
             // convert the numbers that we operate on to lists
             // figure out the index of the decimal point
-            const numAString = numA.toString();
-            const numAList = numAString.split("");
-            const decimalIndexA = numAList.indexOf(".");
+            if (numB !== null) {
+                const numAString = numA.toString();
+                const numAList = numAString.split("");
+                const decimalIndexA = numAList.indexOf(".");
 
-            const numBString = numB.toString();
-            const numBList = numBString.split("");
-            const decimalIndexB = numBList.indexOf(".");
+                const numBString = numB.toString();
+                const numBList = numBString.split("");
+                const decimalIndexB = numBList.indexOf(".");
 
+                // figure out the number of decimal places in both numbers
+                let numberOfDecimalPlacesA = 0
+                let numberOfDecimalPlacesB = 0;
+                if (decimalIndexA !== -1) {
+                    numberOfDecimalPlacesA = numAList.length - decimalIndexA - 1;
+                }
 
+                if (decimalIndexB !== -1) {
+                    numberOfDecimalPlacesB = numBList.length - decimalIndexB - 1;
+                }
+                console.log("numA:", numA);
+                console.log("numA list lenght:", numAList.length);
+                console.log("decimalIndexA:", decimalIndexA);
+                console.log("number of decimal places A:", numberOfDecimalPlacesA);
+                console.log("numB:", numB);
+                console.log("numB list lenght:", numBList.length);
+                console.log("decimalIndexB:", decimalIndexB);
+                console.log("number of decimal places B:", numberOfDecimalPlacesB);
 
-            // figure out the number of decimal places in both numbers
-            let numberOfDecimalPlacesA = 0
-            let numberOfDecimalPlacesB = 0;
-            if (decimalIndexA !== -1) {
-                numberOfDecimalPlacesA = numAList.length - decimalIndexA - 1;
+                // figure out the number of decimal places to round the result to
+                const rounder = Math.max(numberOfDecimalPlacesA, numberOfDecimalPlacesB);
+                console.log("Result:", result);
+                console.log("Rounder:", rounder);
+                // round the result and override the resultInitialString
+                roundedResult = result.toFixed(rounder);
+                console.log("Rounded result:", roundedResult);
+                resultInitialString = roundedResult.toString();
             }
 
-            if (decimalIndexB !== -1) {
-                numberOfDecimalPlacesB = numBList.length - decimalIndexB - 1;
-            }
-            console.log("numA:", numA);
-            console.log("numA list lenght:", numAList.length);
-            console.log("decimalIndexA:", decimalIndexA);
-            console.log("number of decimal places A:", numberOfDecimalPlacesA);
-            console.log("numB:", numB);
-            console.log("numB list lenght:", numBList.length);
-            console.log("decimalIndexB:", decimalIndexB);
-            console.log("number of decimal places B:", numberOfDecimalPlacesB);
-
-            // figure out the number of decimal places to round the result to
-            const rounder = Math.max(numberOfDecimalPlacesA, numberOfDecimalPlacesB);
-            console.log("Result:", result);
-            console.log("Rounder:", rounder);
-            // round the result and override the resultInitialString
-            roundedResult = result.toFixed(rounder);
-            console.log("Rounded result:", roundedResult);
-            resultInitialString = roundedResult.toString();
         }
 
         console.log(resultInitialString);
@@ -213,6 +214,7 @@ const displayResult = (result) => {
         if (resultToDisplay === zeroDivisionErrorMessage) {
             inputField.classList.add("input-field-error-message");
         }
+
         inputField.innerHTML = resultToDisplay;
         return resultToDisplay;
     }
@@ -293,6 +295,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
 
         // user can make a decimal out of the new number
         canDecimal = true;
+        canPercent = true;
     }
     // some number is already in
     else {
@@ -483,25 +486,30 @@ equalButton.addEventListener("click", () => {
     }
 })
 
+// variable to check if the user can make a percentage out of the number
+let canPercent = true;
 const percentButton = document.querySelector("#btn-percent");
 percentButton.addEventListener("click", () => {
-    // when the button is clicked get the current screen content (string)
-    screenContent = minusField.innerHTML + inputField.innerHTML;
-    // convert it to a number to perform an operation
-    const numberToGetpercent = stringToNumber(screenContent);
-    // get a percent of the number
-    const percent = getPercent(numberToGetpercent);
-    // display it on the screen (converted to a string)
-    displayResult(percent);
-    // when the percent is displayed, the next input becomes a new number
-    newNumber();
-    // if the operator is not on we store the percent in numA
-    if (operator === null) {
-        numA = percent;
-    }
-    // if the operator is on we store the percent in numB
-    else {
-        numB = percent;
+    if (canPercent === true) {
+        // when the button is clicked get the current screen content (string)
+        screenContent = minusField.innerHTML + inputField.innerHTML;
+        // convert it to a number to perform an operation
+        const numberToGetpercent = stringToNumber(screenContent);
+        // get a percent of the number
+        const percent = getPercent(numberToGetpercent);
+        // display it on the screen (converted to a string)
+        displayResult(percent);
+        // when the percent is displayed, the next input becomes a new number
+        newNumber();
+        // if the operator is not on we store the percent in numA
+        if (operator === null) {
+            numA = percent;
+        }
+        // if the operator is on we store the percent in numB
+        else {
+            numB = percent;
+        }
+        canPercent = false;
     }
 
 })
