@@ -97,7 +97,6 @@ const displayResult = (result) => {
         // but they are long because of the number of decimals spaces and may overflow the screen
         // if the number has more than 9 digits (in case of negative numbers there's a "-"" at the beggining)
         if ((resultInitialString.length > 10 && result < 0) || (resultInitialString.length > 9 && result >= 0)) {
-            console.log("Conditional works!")
             // convert the numbers that we operate on to lists
             // figure out the index of the decimal point
             if (numB !== null) {
@@ -119,28 +118,16 @@ const displayResult = (result) => {
                 if (decimalIndexB !== -1) {
                     numberOfDecimalPlacesB = numBList.length - decimalIndexB - 1;
                 }
-                console.log("numA:", numA);
-                console.log("numA list lenght:", numAList.length);
-                console.log("decimalIndexA:", decimalIndexA);
-                console.log("number of decimal places A:", numberOfDecimalPlacesA);
-                console.log("numB:", numB);
-                console.log("numB list lenght:", numBList.length);
-                console.log("decimalIndexB:", decimalIndexB);
-                console.log("number of decimal places B:", numberOfDecimalPlacesB);
 
                 // figure out the number of decimal places to round the result to
                 const rounder = Math.max(numberOfDecimalPlacesA, numberOfDecimalPlacesB);
-                console.log("Result:", result);
-                console.log("Rounder:", rounder);
                 // round the result and override the resultInitialString
                 roundedResult = result.toFixed(rounder);
-                console.log("Rounded result:", roundedResult);
                 resultInitialString = roundedResult.toString();
             }
 
         }
 
-        console.log(resultInitialString);
         // create a list of characters
         const resultList = resultInitialString.split("");
         // replace the commas with a dot
@@ -276,6 +263,9 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         operatorButton.classList.remove("orange-btn-operator-on");
     })
 
+    // and the clear button now has something to clear and indicates it
+    clearButton.innerHTML = "C";
+
     // if the newNum is true we stored one number and the operator is clicked
     // the user will now enter a new number
     if (newNum === true || inputField.innerHTML === "0") {
@@ -293,7 +283,7 @@ digitButtons.forEach((digitButton) => digitButton.addEventListener("click", () =
         // new number is not a deciaml at the beggining
         isDecimal = false;
 
-        // user can make a decimal out of the new number
+        // user can make a decimal and percent out of the new number
         canDecimal = true;
         canPercent = true;
     }
@@ -509,20 +499,44 @@ percentButton.addEventListener("click", () => {
         else {
             numB = percent;
         }
+        // user can make a percent out of the result, becomes true when the user starts inputing a new number
         canPercent = false;
     }
-
 })
 
+const clearButton = document.querySelector("#btn-clear");
+clearButton.addEventListener("click", () => {
+    // clear the screen
+    minusField.innerHTML = "";
+    inputField.innerHTML = "0";
+
+    // clear the operand
+    operator = null;
+    operatorButtons.forEach((operatorButton) => {
+        operatorButton.classList.remove("orange-btn-operator-on");
+    })
+
+    // clear numA and numB
+    numA = null;
+    numB = null;
+
+    // enable making the new button a decimal
+    isDecimal = false;
+    canDecimal = true;
+    newNumber();
+
+    clearButton.innerHTML = "AC";
+})
 
 /*
 TODO
 - clear functionality:
 clears the curret number and makes it 0
-if numA is null && screen === "0": nothing happens when pressed; shows AC
 if numA is null && screen !== "0": screen becomes "0" when pressed; shows C -> AC; newNum becomes true; number of digits becomes 1
 if numA !== null: screen becomes "0" when pressed; shows C -> AC; the operator stays on; numA actually stays the same
 
 - media query for mobile
+
+- favicon
 */
 
